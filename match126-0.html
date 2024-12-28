@@ -1,0 +1,130 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/7/22101374_Nabel_Ahmed_CSE422_07_Assignment03_Fall2024_-_Nabel_Ahmed.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/7/22101374_Nabel_Ahmed_CSE422_07_Assignment03_Fall2024_-_Nabel_Ahmed.py<p></p><pre>
+<a name="1"></a><font color="#00FF00"><a href="match126-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_27.gif"/></a>
+
+import random
+
+# ------------------------------------------------------------------ TASK - 1 ------------------------------------------------------------------
+
+class MortalKombat:
+    def __init__(self, starting_player):
+        self.starting_player = starting_player  # 0 for Scorpion, 1 for Sub-Zero
+        self.rounds = []
+        self.total_rounds = 0
+
+    def alpha_beta(self, depth, alpha, beta, maxPlayer):
+        if depth == 5:  # Assuming max depth = 5
+            return random.choice([-1, 1])  # Leaf node values: -1 for Scorpion win, 1 for Sub-Zero win. Choosing randomly for unpredictability
+
+        if maxPlayer:
+            bestVal = float("-inf")
+            for _ in range(2):  # Two possible moves, because branching factor is 2
+                val = self.alpha_beta(depth + 1, alpha, beta, False)
+                bestVal = max(bestVal, val)
+</font>                alpha = max(alpha, val)
+                if beta &lt;= alpha:
+                    break  # Prune condition
+            return bestVal
+        else:
+            bestVal = float("inf")
+            for _ in range(2):  # Two possible moves, because branching factor is 2
+                val = self.alpha_beta(depth + 1, alpha, beta, True)
+<a name="0"></a><font color="#FF0000"><a href="match126-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_49.gif"/></a>
+
+                bestVal = min(bestVal, val)
+                beta = min(beta, val)
+                if beta &lt;= alpha:
+                    break  # Prune condition
+            return bestVal
+
+    def play_game(self):
+        current_player = self.starting_player
+        for round_number in range(1, 4):  # Up to 3 rounds
+            self.total_rounds += 1
+            winner = self.alpha_beta(0, float("-inf"), float("inf"), current_player)  # Get the winner of the round
+            if winner == -1:
+                round_winner = "Scorpion"
+            else:
+                round_winner = "Sub-Zero"
+            self.rounds.append(round_winner)
+            current_player = 1 - current_player  # Switch player for the next round
+
+    def get_game_result(self):
+        self.play_game()
+        if self.rounds.count("Scorpion") &gt; self.rounds.count("Sub-Zero"):
+            game_winner = "Scorpion"
+        else:
+            game_winner = "Sub-Zero"
+        return game_winner, self.total_rounds, self.rounds
+
+
+# Input: 0 for Scorpion starts, 1 for Sub-Zero starts
+starting_player = int(input("Enter starting player (0 for Scorpion, 1 for Sub-Zero): "))
+game = MortalKombat(starting_player)
+winner, total_rounds, rounds_winners = game.get_game_result()
+
+# Output the results
+print(f"Game Winner: {winner}")
+</font>print(f"Total Rounds Played: {total_rounds}")
+for i in range(total_rounds):
+    print(f"Winner of Round {i + 1}: {rounds_winners[i]}")
+
+# ------------------------------------------------------------------ TASK - 2 ------------------------------------------------------------------
+
+# Uncomment the following code and comment out the code of Task - 1 to run individually
+
+# def minimax(depth, nodeIndex, isMax, scores, alpha, beta):
+#     if depth == 3:  # Leaf node
+#         return scores[nodeIndex]
+
+#     if isMax:  # Pacman's turn
+#         best = float('-inf')
+#         for i in range(2):  # Two children
+#             val = minimax(depth + 1, nodeIndex * 2 + i, False, scores, alpha, beta)  # Binary tree traversal (2n + i)
+#             best = max(best, val)
+#             alpha = max(alpha, best)
+#             if beta &lt;= alpha:
+#                 break  # Prune condition
+#         return best
+#     else:  # Ghost's turn
+#         best = float('inf')
+#         for i in range(2):  # Two children
+#             val = minimax(depth + 1, nodeIndex * 2 + i, True, scores, alpha, beta)  # Binary tree traversal (2n + i)
+#             best = min(best, val)
+#             beta = min(beta, best)
+#             if beta &lt;= alpha:
+#                 break  # Prune condition
+#         return best
+
+# def pacman_game(c):
+#     scores = [3, 6, 2, 3, 7, 1, 2, 0]  # Leaf node scores
+#     alpha = float('-inf')
+#     beta = float('inf')
+
+#     # Calculate minimax value without using dark magic
+#     minimax_value_without_magic = minimax(0, 0, True, scores, alpha, beta)
+
+#     # Calculate minimax values with dark magic
+#     left_move_value = max(scores[ : 3]) - c  # If Pacman goes left and uses dark magic to control ghost's move
+#     right_move_value = max(scores[4 : ]) - c  # If Pacman goes right and uses dark magic to control ghost's move
+
+#     # Determine the best move with dark magic
+#     best_with_magic = max(left_move_value, right_move_value)
+
+#     # Output results
+#     # print(f"The minimax value without using dark magic is {minimax_value_without_magic}.")
+#     if best_with_magic &gt; minimax_value_without_magic:
+#         print(f"The new minimax value is {best_with_magic}. Pacman goes right and uses dark magic.")
+#     else:
+#         print(f"The minimax value is {minimax_value_without_magic}. Pacman does not use dark magic.")
+
+# # Test cases
+# pacman_game(2)
+# pacman_game(5)</pre>
+</body>
+</html>

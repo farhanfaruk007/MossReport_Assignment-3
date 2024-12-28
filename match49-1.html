@@ -1,0 +1,131 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/3/22299314_MD_Adnan_Hossain_Sadi_CSE422_03_Lab_Assignment03_Fall2024_-_MD._ADNAN_HOSSAIN_SADI.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/16/22201760_CSE422_16_LabAssignment3_-_MAHDI_HASAN_MEEM.py<p></p><pre>
+<a name="1"></a><font color="#00FF00"><a href="match49-0.html#1" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_24.gif"/></a>
+
+import random
+
+# Part 1
+def AlphaBetaPrune(depth, currentPlayer, minValue, maxValue):
+    if depth == 5:
+        return random.choice([-1, 1])
+
+    if currentPlayer == 0:
+        bestOutcome = -float('inf')
+        for _ in range(2):
+            outcome = AlphaBetaPrune(depth + 1, 1, minValue, maxValue)
+            bestOutcome = max(bestOutcome, outcome)
+            minValue = max(minValue, outcome)
+            if minValue &gt;= maxValue:
+                break
+        return bestOutcome
+    else:
+        worstOutcome = float('inf')
+        for _ in range(2):
+            outcome = AlphaBetaPrune(depth + 1, 0, minValue, maxValue)
+            worstOutcome = min(worstOutcome, outcome)
+            maxValue = min(maxValue, outcome)
+            if minValue &gt;= maxValue:
+                break
+        return worstOutcome
+
+def simulateMortalKombat(startingPlayer):
+    scorpionWins = 0
+</font>    subZeroWins = 0
+    roundResults = []
+
+    currentPlayer = startingPlayer
+<a name="2"></a><font color="#0000FF"><a href="match49-0.html#2" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_11.gif"/></a>
+
+    nextPlayer = 1 - startingPlayer
+
+    for _ in range(3):
+        result = AlphaBetaPrune(0, currentPlayer, -float('inf'), float('inf'))
+        if result == -1:
+            roundResults.append("Scorpion")
+            scorpionWins += 1
+        else:
+            roundResults.append("Sub-Zero")
+            subZeroWins += 1
+
+        if scorpionWins == 2 or subZeroWins == 2:
+            break
+
+        currentPlayer, nextPlayer = nextPlayer, currentPlayer
+</font>
+    gameWinner = "Scorpion" if scorpionWins &gt; subZeroWins else "Sub-Zero"
+<a name="0"></a><font color="#FF0000"><a href="match49-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_49.gif"/></a>
+
+    return gameWinner, len(roundResults), roundResults
+
+# Part 2
+def pacmanAlphaBeta(depth, maximizingPlayer, minValue, maxValue, scores, index=0):
+    if depth == 3:
+        return scores[index]
+
+    if maximizingPlayer:
+        bestValue = -float('inf')
+        for i in range(2):
+            value = pacmanAlphaBeta(depth + 1, False, minValue, maxValue, scores, index * 2 + i)
+            bestValue = max(bestValue, value)
+            minValue = max(minValue, value)
+            if minValue &gt;= maxValue:
+                break
+        return bestValue
+    else:
+        worstValue = float('inf')
+        for i in range(2):
+            value = pacmanAlphaBeta(depth + 1, True, minValue, maxValue, scores, index * 2 + i)
+            worstValue = min(worstValue, value)
+            maxValue = min(maxValue, value)
+            if minValue &gt;= maxValue:
+                break
+        return worstValue
+
+def pacmanGameDecision(cost):
+    scores = [3, 6, 2, 3, 7, 1, 2, 0]
+
+    optimalScore = pacmanAlphaBeta(0, True, -float('inf'), float('inf'), scores)
+
+    leftOutcome = max(scores[0:4]) - cost
+    rightOutcome = max(scores[4:8]) - cost
+
+    if leftOutcome &gt; rightOutcome:
+        magicScore = leftOutcome
+        direction = "left"
+    else:
+        magicScore = rightOutcome
+        direction = "right"
+
+    if magicScore &gt; optimalScore:
+        print(f"The new minimax value is {magicScore}. Pacman moves {direction} and uses dark magic.")
+    else:
+        print(f"The minimax value is {optimalScore}. Pacman does not use dark magic.")
+
+
+startingPlayer = int(input("Choose the first player (0 for Scorpion, 1 for Sub-Zero): "))
+
+gameWinner, totalRounds, roundWinners = simulateMortalKombat(startingPlayer)
+
+print("\nMortal Kombat Results:")
+print(f"Winner of the game: {gameWinner}")
+print(f"Rounds played: {totalRounds}")
+for idx, winner in enumerate(roundWinners, 1):
+</font>    print(f"Round {idx} winner: {winner}")
+
+
+print("\nPacman Game with Dark Magic:")
+cost1 = 2
+cost2 = 5
+
+print("Case 1:")
+pacmanGameDecision(cost1)
+print("\nCase 2:")
+pacmanGameDecision(cost2)
+</pre>
+</body>
+</html>

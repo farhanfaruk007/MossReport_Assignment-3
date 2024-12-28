@@ -1,0 +1,133 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/1/21201514_ILHANBINAHSAN_1_-_ILHAN_BIN_AHSAN.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/12/22101717_RajinIbnaRajuanurRahman_CSE422_12_Assignment03_Fall2024_-_RAJIN_IBNA_RAJUANUR_RAHMAN.py<p></p><pre>
+# PART- 01
+from random import choice
+class MortalKombat:
+    def __init__(self, p1):
+      self.p1 = p1
+      self.max_D = 5
+      self.round_winners = []
+      self.scorpion_v = -1
+      self.subzero_v = 1
+
+    def alpha_beta_pruning(self, depth, flag, a, b):
+      if depth == self.max_D:
+        return choice([self.scorpion_v, self.subzero_v])
+
+      if flag == True:
+        max_eval = float('-inf')
+        for i in range(2):
+          eval = self.alpha_beta_pruning(depth + 1, False, a, b)
+          max_eval = max(max_eval, eval)
+          a = max(a, eval)
+          if b &lt;= a:
+            break
+        return max_eval
+
+      else:
+        min_eval = float('inf')
+        for j in range(2):
+          eval = self.alpha_beta_pruning(depth + 1, True, a, b)
+          min_eval = min(min_eval, eval)
+          b = min(b, eval)
+          if b &lt;= a:
+            break
+        return min_eval
+
+    def simulate_round(self):
+        return self.alpha_beta_pruning(0, self.p1 == 1, float('-inf'), float('inf'))
+
+    def play_game(self):
+        current_P = self.p1
+        R = 0
+        while True:
+          R += 1
+          result = self.simulate_round()
+
+          if result == self.scorpion_v:
+            self.round_winners.append("Scorpion")
+          else:
+            self.round_winners.append("Sub-Zero")
+
+          if self.round_winners.count("Scorpion") == 2:
+            return "Scorpion", R, self.round_winners
+          if self.round_winners.count("Sub-Zero") == 2:
+            return "Sub-Zero", R, self.round_winners
+
+          current_P = 1 - current_P
+          self.p1 = current_P
+
+p1 = int(input("[PART- 01] Enter the player (0/1): "))
+
+game = MortalKombat(p1)
+winner, R, round_winners = game.play_game()
+
+output_file = open("output.txt", "a")
+output_file.write(f"Game Winner: {winner}\n")
+output_file.write(f"Total Rounds Played: {R}\n")
+n = 1
+for w in round_winners:
+  output_file.write(f"Winner of Round {n}: {w}\n")
+  n += 1
+
+
+# PART- 02
+def pacman_game_AB_pruning(node, depth, flag, a, b, leaf):
+    if depth == 3:
+      return leaf[node]
+
+    if flag == True:
+<a name="0"></a><font color="#FF0000"><a href="match242-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_15.gif"/></a>
+
+      max_eval = float('-inf')
+      for i in range(2):
+        eval = pacman_game_AB_pruning(2 * node + i, depth + 1, False, a, b, leaf)
+        max_eval = max(max_eval, eval)
+        a = max(a, eval)
+        if b &lt;= a:
+          break
+      return max_eval
+
+    else:
+      min_eval = float('inf')
+      for j in range(2):
+        eval = pacman_game_AB_pruning(2 * node + j, depth + 1, True, a, b, leaf)
+        min_eval = min(min_eval, eval)
+        b = min(b, eval)
+        if b &lt;= a:
+</font>          break
+      return min_eval
+
+
+def pacman_game(c):
+<a name="1"></a><font color="#00FF00"><a href="match242-0.html#1" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_5.gif"/></a>
+
+    leaf = [3, 6, 2, 3, 7, 1, 2, 0]
+
+    no_magic = pacman_game_AB_pruning(0, 0, True, float('-inf'), float('inf'), leaf)
+
+    l_subtree = max(leaf[0:4]) - c
+</font>    r_subtree = max(leaf[4:8]) - c
+
+    if l_subtree &gt; r_subtree:
+      magic = l_subtree
+      best_direction = "left"
+
+    else:
+      magic = r_subtree
+      best_direction = "right"
+
+    if magic &gt; no_magic:
+      print(f"The new minimax value is {magic}. Pacman goes {best_direction} and uses dark magic")
+    else:
+      print(f"The minimax value is {no_magic}. Pacman does not use dark magic")
+
+C = int(input("[PART- 02] Specific Cost: "))
+pacman_game(C)</pre>
+</body>
+</html>

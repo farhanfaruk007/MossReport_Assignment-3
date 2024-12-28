@@ -1,0 +1,108 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/1/22101008_Sadman_Rahman_09_-_S.M._SADMAN_RAHMAN.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/6/21301642_Monjur_Ahmed_CSE422_06_Assignment03_Fall2024_-_MONJUR_AHMED.py<p></p><pre>
+#.......Part 01..........#
+
+
+import random
+def alpha_beta(depth, is_maximizing, alpha, beta):
+    if depth == 0:
+        return random.choice([-1, 1]) 
+
+    if is_maximizing:
+        max_eval = float('-inf')
+        for _ in range(2): 
+            eval = alpha_beta(depth - 1, False, alpha, beta)
+            max_eval = max(max_eval, eval)
+            alpha = max(alpha, eval)
+            if beta &lt;= alpha:
+                break
+        return max_eval
+    else:
+        min_eval = float('inf')
+        for _ in range(2):
+            eval = alpha_beta(depth - 1, True, alpha, beta)
+            min_eval = min(min_eval, eval)
+            beta = min(beta, eval)
+            if beta &lt;= alpha:
+                break
+        return min_eval
+
+def simulate_round(player_turn):
+    result = alpha_beta(4, player_turn == 0, float('-inf'), float('inf'))
+    return "Scorpion" if result == -1 else "Sub-Zero"
+
+def mortal_kombat_v2():
+    starting_player = int(input("Enter starting player (0 for Scorpion, 1 for Sub-Zero): "))
+    scores = {"Scorpion": 0, "Sub-Zero": 0}
+    round_count = 0
+    while scores["Scorpion"] &lt; 3 and scores["Sub-Zero"] &lt; 3:
+        round_count += 1
+        winner = simulate_round(starting_player)
+        scores[winner] += 1
+        print(f"Winner of Round {round_count}: {winner}")
+        starting_player = 1 - starting_player 
+
+    game_winner = "Scorpion" if scores["Scorpion"] == 3 else "Sub-Zero"
+    print(f"Game Winner: {game_winner}")
+    print(f"Total Rounds Played: {round_count}")
+
+mortal_kombat_v2()
+
+
+
+
+##.........Part 02............###
+
+
+def alpha_beta(depth, is_maximizing, alpha, beta, scores, index):
+    if depth == 0: 
+        return scores[index]
+
+<a name="0"></a><font color="#FF0000"><a href="match232-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_28.gif"/></a>
+
+    if is_maximizing:
+        max_eval = float('-inf')
+        for i in range(2):  
+            eval = alpha_beta(depth - 1, False, alpha, beta, scores, index * 2 + i)
+            max_eval = max(max_eval, eval)
+            alpha = max(alpha, eval)
+            if beta &lt;= alpha:
+                break
+        return max_eval
+    else:
+        min_eval = float('inf')
+        for i in range(2):
+            eval = alpha_beta(depth - 1, True, alpha, beta, scores, index * 2 + i)
+            min_eval = min(min_eval, eval)
+            beta = min(beta, eval)
+            if beta &lt;= alpha:
+                break
+        return min_eval
+
+def pacman_strategy(dark_magic_cost):
+    original_scores = [4, 5, 6, 7, 3, 8, 2, 1]
+    without_magic = alpha_beta(3, True, float('-inf'), float('inf'), original_scores, 0)
+</font>    magic_scores = original_scores[:]
+    for i in range(len(magic_scores)):
+        if magic_scores[i] &gt; 4:  
+            magic_scores[i] -= dark_magic_cost
+
+    with_magic = alpha_beta(3, True, float('-inf'), float('inf'), magic_scores, 0)
+
+    print("Results for Pac-Man's Strategy:")
+    print(f"The minimax value is {without_magic}")
+    if with_magic &gt; without_magic:
+        print(f"Pacman uses dark magic and the new minimax value is {with_magic}.")
+    else:
+        print("Pacman does not use dark magic.")
+
+dark_magic_cost = int(input("Enter the cost of using dark magic: "))
+pacman_strategy(dark_magic_cost)
+</pre>
+</body>
+</html>

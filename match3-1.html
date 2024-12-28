@@ -1,0 +1,150 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/2/21301543_Lab3_Sec2_-_REDWANUR_RAHMAN.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/10/23241118_CSE422_Section10_LabAssignment3_-_ABDUR_RAHMAN_SHAFI.py<p></p><pre>
+# Part 1
+
+<a name="1"></a><font color="#00FF00"><a href="match3-0.html#1" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_42.gif"/></a>
+
+import random
+
+def generateOutcomes(branchingFactor, depth, outcomes = []):
+    for branchIndex in range(branchingFactor ** depth):
+        branch = []
+        for choiceIndex in range(branchingFactor):
+            choice = random.choice([1, -1])
+            branch.append(choice)
+        outcomes.append(branch)
+    return outcomes
+
+  
+def alphaBetaPruning(outcomes, depth, nodeIndex, alpha, beta, childIndex = 0, isMaximiser = True):
+    if depth == 0:
+        return outcomes[nodeIndex][childIndex], nodeIndex
+    if isMaximiser:
+        maxValue = float('-inf')
+        for childIndex in range(len(outcomes[nodeIndex])):
+            value, nodeIndex = alphaBetaPruning(outcomes, depth-1, nodeIndex, alpha, beta, childIndex, False)
+            maxValue = max(maxValue, value)
+            alpha = max(alpha, maxValue)
+            if alpha &gt;= beta:
+                break
+        if depth == 1:
+            nodeIndex += 1
+        return maxValue, nodeIndex
+    else:
+        minValue = float('inf')
+        for childIndex in range(len(outcomes[nodeIndex])):
+            value, nodeIndex = alphaBetaPruning(outcomes, depth-1, nodeIndex, alpha, beta, childIndex, True)
+            minValue = min(minValue, value)
+            beta = min(beta, minValue)
+            if alpha &gt;= beta:
+                break
+        if depth == 1:
+            nodeIndex += 1
+        return minValue, nodeIndex
+    
+    
+branchingFactor = 2
+players = ['Scorpion', 'Sub-Zero']
+initiator = 0
+rounds = 3
+results = []
+for roundIndex in range(rounds):
+    depth = random.randint(2, 5)
+    outcomes = generateOutcomes(branchingFactor, depth)
+    result, finalIndex = alphaBetaPruning(outcomes, depth, 0, float('-inf'), float('inf'), childIndex=0, isMaximiser=True)
+    results.append(result)
+    
+    
+if sum(results) &gt; 0:
+    print(f"Game Winner: {players[initiator]}")
+else:
+    print(f"Game Winner: {players[1-initiator]}")
+    
+print(f"Total Rounds Played: {rounds}")
+
+for roundIndex in range(rounds):
+    if results[roundIndex] &gt; 0:
+        print(f"Winner of Round {roundIndex+1}: {players[initiator]}")
+    else:
+        print(f"Winner of Round {roundIndex+1}: {players[1-initiator]}")
+</font>
+<a name="0"></a><font color="#FF0000"><a href="match3-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_56.gif"/></a>
+
+print("---------------------------------------------")
+
+# Part 2
+
+outcomes = [3, 6, 2, 3, 7, 1, 2, 0]
+
+for outcomeIndex in range(len(outcomes)//2):
+    firstOutcome, secondOutcome = outcomes[outcomeIndex], outcomes[outcomeIndex+1]
+    outcomes[outcomeIndex] = [firstOutcome, secondOutcome]
+    outcomes.pop(outcomeIndex+1)
+print(outcomes)
+
+def alphaBetaPruning(outcomes, depth, nodeIndex, alpha, beta, childIndex = 0, isMaximiser = True):
+    if depth == 0:
+        return outcomes[nodeIndex][childIndex], nodeIndex
+    if isMaximiser:
+        maxValue = float('-inf')
+        for childIndex in range(2):
+            value, nodeIndex = alphaBetaPruning(outcomes, depth-1, nodeIndex, alpha, beta, childIndex, False)
+            maxValue = max(maxValue, value)
+            alpha = max(alpha, maxValue)
+            if alpha &gt;= beta:
+                break
+        if depth == 1:
+            nodeIndex += 1
+        return maxValue, nodeIndex
+    else:
+        minValue = float('inf')
+        for childIndex in range(2):
+            value, nodeIndex = alphaBetaPruning(outcomes, depth-1, nodeIndex, alpha, beta, childIndex, True)
+            minValue = min(minValue, value)
+            beta = min(beta, minValue)
+            if alpha &gt;= beta:
+                break
+        if depth == 1:
+            nodeIndex += 1
+        return minValue, nodeIndex
+
+def modifiedMinMax(cost, outcomes, depth, isMaximiser = True):
+    if len(outcomes) == 1:
+        return max(outcomes[0])
+    if depth % 2 != 0:
+        for outcomeIndex in range(len(outcomes)//2):
+            firstOutcome, secondOutcome = outcomes[outcomeIndex], outcomes[outcomeIndex+1]
+            firstOutcome = max(firstOutcome)
+            secondOutcome = max(secondOutcome)
+            outcomes[outcomeIndex] = [firstOutcome, secondOutcome]
+            outcomes.pop(outcomeIndex+1)
+        return modifiedMinMax(cost, outcomes, depth-1, isMaximiser)
+    else:
+        for outcomeIndex in range(len(outcomes)//2):
+            firstOutcome, secondOutcome = outcomes[outcomeIndex], outcomes[outcomeIndex+1]
+            firstOutcome = max(firstOutcome)
+            secondOutcome = max(secondOutcome)
+            outcomes[outcomeIndex] = [firstOutcome-cost, secondOutcome-cost]
+            outcomes.pop(outcomeIndex+1)
+        return modifiedMinMax(cost, outcomes, depth-1, isMaximiser)
+
+depth = 3
+cost = 2
+
+withoutDarkMagic, finalIndex = alphaBetaPruning(outcomes, depth, 0, float('-inf'), float('inf'), childIndex=0, isMaximiser=True)
+withDarkMagic = modifiedMinMax(cost, outcomes, depth, True)
+
+print(f"With Dark Magic: {withDarkMagic}")
+print(f"Without Dark Magic: {withoutDarkMagic}")
+
+if withDarkMagic &gt; withoutDarkMagic:
+    print(f"The new minimax value is {withDarkMagic}. Pacman goes right and uses dark magic.")
+else:
+    print(f"The minimax value is {withoutDarkMagic}. Pacman does not use dark magic.")</font></pre>
+</body>
+</html>

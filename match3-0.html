@@ -1,0 +1,147 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/2/21301543_Lab3_Sec2_-_REDWANUR_RAHMAN.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/2/21301543_Lab3_Sec2_-_REDWANUR_RAHMAN.py<p></p><pre>
+# Part 1
+<a name="1"></a><font color="#00FF00"><a href="match3-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_42.gif"/></a>
+
+import random
+
+def Outcome_generator(b_fac, dep, outcomes = []) :
+    for b_ind in range(b_fac ** dep) :
+        branch = []
+        for c_ind in range(b_fac) :
+            chc = random.choice([1, -1])
+            branch.append(chc)
+        outcomes.append(branch)
+    return outcomes 
+
+  
+def albe_prun(outcomes, d, node_ind, al, be, child_ind = 0, is_maximiser = True) :
+    if d == 0 :
+        return outcomes[node_ind][child_ind], node_ind
+    if is_maximiser :
+        max_val = float('-info')
+        for child_ind in range(len(outcomes[node_ind])) :
+            val, node_ind = albe_prun(outcomes, d-1, node_ind, al, be, child_ind, False)
+            max_val = max(max_val, val)
+            al = max(al, max_val)
+            if al &gt;= be :
+                break
+        if d == 1 :
+            node_ind += 1
+        return max_val, node_ind 
+    else :
+        min_val = float('inf')
+        for child_ind in range(len(outcomes[node_ind])) :
+            val, node_ind = alphaBetaPruning(outcomes, depth - 1, node_ind, al, be, child_ind, True)
+            min_val = min(min_val, val)
+            be = min(be, min_val)
+            if al &gt;= be :
+                break
+        if d == 1 :
+            node_ind += 1
+        return min_val, node_ind
+    
+    
+branching_factor = 2
+players = ['Scorpion', 'Sub Zero']
+initiator = 0
+rounds = 3
+results = []
+for roundIndex in range(rounds) :
+    depth = random.randint(2, 5)
+    outcomes = Outcome_generator(branching_factor, depth)
+    result, final_ind = albe_prun(outcomes, depth, 0, float('-inf'), float('inf'), child_ind = 0, is_maximiser = True)
+    results.append(result)
+    
+    
+if sum(results) &gt; 0 :
+    print(f"Game Winner: {players[initiator]}")
+else :
+    print(f"Game Winner: {players[1 - initiator]}")    
+print(f"Total Rounds Played: {rounds}")
+
+for round_ind in range(rounds) :
+    if results[round_ind] &gt; 0 :
+        print(f"Winner of Round {round_ind + 1} : {players[initiator]}")
+    else :
+        print(f"Winner of Round {round_ind + 1} : {players[1 - initiator]}")
+</font><a name="0"></a><font color="#FF0000"><a href="match3-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_56.gif"/></a>
+
+
+
+
+# Part 2
+outcomes = [3, 6, 2, 3, 7, 1, 2, 0]
+
+for outcome_ind in range(len(outcomes) // 2) :
+    outcome_1, outcome_2 = outcomes[outcome_ind], outcomes[outcome_ind + 1]
+    outcomes[outcome_ind] = [outcome_1, outcome_2]
+    outcomes.pop(outcome_ind + 1)
+print(outcomes)
+
+def albe_prun(outcomes, d, node_ind, al, be, child_ind = 0, is_maximiser = True) :
+    if depth == 0 :
+        return outcomes[node_ind][child_ind], node_ind
+    if is_maximiser :
+        max_vale = float('-inf')
+        for child_ind in range(2) :
+            val, node_ind = albe_prun(outcomes, d - 1, node_ind, al, be, child_ind, False)
+            max_val = max(max_val, val)
+            al = max(al, max_val)
+            if al &gt;= be :
+                break
+        if d == 1 :
+            node_ind += 1
+        return max_val, node_ind
+    else :
+        min_val = float('inf')
+        for child_ind in range(2) :
+            val, node_ind = albe_prun(outcomes, d - 1, node_ind, al, be, child_ind, True)
+            min_val = min(min_val, val)
+            beta = min(beta, min_val)
+            if al &gt;= be :
+                break
+        if d == 1 :
+            node_ind += 1
+        return min_val, node_ind
+
+def modded_minmax(cost, outcomes, d, maximiser = True) :
+    if len(outcomes) == 1 :
+        return max(outcomes[0])
+    if d % 2 != 0 :
+        for otc_ind in range(len(outcomes)//2):
+            firstOutcome, secondOutcome = outcomes[otc_ind], outcomes[otc_ind + 1]
+            firstOutcome = max(firstOutcome)
+            secondOutcome = max(secondOutcome)
+            outcomes[otc_ind] = [firstOutcome, secondOutcome]
+            outcomes.pop(otc_ind + 1)
+        return modded_minmax(cost, outcomes, d - 1, maximiser)
+    else:
+        for otc_ind in range(len(outcomes) // 2) :
+            firstOutcome, secondOutcome = outcomes[otc_ind], outcomes[otc_ind + 1]
+            firstOutcome = max(firstOutcome)
+            secondOutcome = max(secondOutcome)
+            outcomes[otc_ind] = [firstOutcome - cost, secondOutcome - cost]
+            outcomes.pop(otc_ind + 1)
+        return modded_minmax(cost, outcomes, d - 1, maximiser)
+
+depth = 3
+cost = 2
+
+without_DM, final_ind = albe_prun(outcomes, depth, 0, float('-inf'), float('inf'), child_ind = 0, is_maximiser = True)
+with_DM = modded_minmax(cost, outcomes, depth, True)
+
+print(f"With Dark Magic: {with_DM}")
+print(f"Without Dark Magic: {without_DM}")
+
+if with_DM &gt; without_DM :
+    print(f"The new minimax value is {with_DM}. Pacman goes right and uses dark magic.")
+else:
+    print(f"The minimax value is {without_DM}. Pacman does not use dark magic.")</font></pre>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/15/22101783_Niaz_Morshed_CSE422_15_Lab_Assignment03_Fall2024_-_Niaz_Morshed.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/15/22101783_Niaz_Morshed_CSE422_15_Lab_Assignment03_Fall2024_-_Niaz_Morshed.py<p></p><pre>
+#part a
+def alfaBEta1(position, current_depth, max_player, node_values, alpha_val, beta_val):
+    if current_depth==5:
+        return node_values[position]
+
+    if max_player==False:
+        best_val = 99999999999999999
+        for move in range(2):
+            eval_val = alfaBEta1(position*2+move, current_depth+1, True, node_values, alpha_val, beta_val)
+            best_val = min(eval_val, best_val)
+            beta_val = min(beta_val, best_val)
+            if beta_val&lt;=alpha_val:
+                break
+        return best_val
+    else:
+        best_val = -99999999999999999
+        for move in range(2):
+            eval_val = alfaBEta1(position*2+move, current_depth+1, False, node_values, alpha_val, beta_val)
+            best_val = max(eval_val, best_val)
+            alpha_val = max(alpha_val, best_val)
+            if beta_val&lt;=alpha_val:
+                break
+        return best_val
+
+def mortalGame(start_player, total_rounds):
+    round_count = total_rounds
+    round_results = []
+    alpha_val = -99999999999999999
+    beta_val = 99999999999999999
+<a name="1"></a><font color="#00FF00"><a href="match225-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_9.gif"/></a>
+
+    node_values = [-1, 1, -1, 1, 1, -1, -1, 1, -1, 1, -1, 1, 1, -1, -1, 1, -1, 1, -1, 1, 1, -1, -1, 1, -1, 1, -1, 1, 1, -1, -1, 1]
+    for round_num in range(1, round_count+1):
+</font>        if round_num%2==0:
+            player_turn = None
+            if start_player!=0:
+                player_turn = True
+            else:
+                player_turn = False
+            result = alfaBEta1(0, 0, player_turn, node_values, alpha_val, beta_val)
+        else:
+            player_turn = None
+            if start_player==0:
+                player_turn = True
+            else:
+                player_turn = False
+            result = alfaBEta1(0, 0, player_turn, node_values, alpha_val, beta_val)
+        if result==1:
+            round_results.append((round_num, "Sub-Zero"))
+        else:
+            round_results.append((round_num, "Scorpion"))
+    player1_score = 0
+    player2_score = 0
+    for result in round_results:
+        if result[1] == "Scorpion":
+            player1_score += 1
+        else:
+            player2_score += 1
+    if player1_score &gt; player2_score:
+        final_winner = "Scorpion"
+    elif player2_score &gt; player1_score:
+        final_winner = "Sub-Zero"
+    else:
+        final_winner = "Draw"
+    print(f"Game Winner: {final_winner}")
+    print(f"Total Rounds Played: {round_count}")
+    for round_num in range(1, round_count+1):
+        print(f"Winner of Round {round_num}: {round_results[round_num-1][1]}")
+
+player_choice = int(input("please enter 0 for Scorpion or 1 for Sub-Zero "))
+num_rounds = int(input("please enter numbers of round to be played "))
+mortalGame(player_choice, num_rounds)
+
+#part b
+def alfaBeta2(position, current_depth, max_player, node_values, alpha_val, beta_val):
+    if current_depth==3:
+        return node_values[position]
+
+    if max_player==False:
+        best_val = 99999999999999999
+        for move in range(2):
+            eval_val = alfaBeta2(position*2+move, current_depth+1, True, node_values, alpha_val, beta_val)
+            best_val = min(eval_val, best_val)
+            beta_val = min(beta_val, best_val)
+            if beta_val&lt;=alpha_val:
+                break
+        return best_val
+    else:
+        best_val = -99999999999999999
+        for move in range(2):
+            eval_val = alfaBeta2(position*2+move, current_depth+1, False, node_values, alpha_val, beta_val)
+            best_val = max(eval_val, best_val)
+            alpha_val = max(alpha_val, best_val)
+            if beta_val&lt;=alpha_val:
+                break
+        return best_val
+
+def PacmanG(cost):
+    alpha_val = -99999999999999999
+    beta_val = 99999999999999999
+<a name="0"></a><font color="#FF0000"><a href="match225-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_10.gif"/></a>
+
+    node_values = [3, 6, 2, 3, 7, 1, 2, 0]
+    minimax_val = alfaBeta2(0, 0, True, node_values, alpha_val, beta_val)
+    right_values = node_values[len(node_values)//2:]
+    left_values = node_values[:len(node_values)//2]
+    right_max = max(right_values)-cost
+    left_max = max(left_values)-cost
+    best_val = max(right_max, left_max)
+    if best_val&gt;minimax_val:
+</font>        if right_max&gt;left_max:
+            print(f"The new minimax value is {right_max}.Pacman goes right and uses dark magic")
+        else:
+            print(f"The new minimax value is {left_max}.Pacman goes left and uses dark magic")
+    else:
+        print(f"The minimax value is {minimax_val}.Pacman does not use dark magic")
+
+magic_cost = int(input("Please give the value of c "))
+PacmanG(magic_cost)
+</pre>
+</body>
+</html>

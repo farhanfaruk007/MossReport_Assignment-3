@@ -1,0 +1,99 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/13/22101584_Mehrab_Muhtasim_Sayem_CSE422_Assignment03_Fall2024_-_MEHRAB_MUHTASIM_SAYEM.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/18/22301610_Miraz_CSE422_18_assignment03._Fall2024_-_MD_MIRAZ_HOSSAIN_SHAWON.py<p></p><pre>
+import random
+arr=[]
+class Node:
+    def __init__(self, na_me):
+        self.na_me = na_me
+        self.child_renn = []
+    def is_teerm(self):
+        return not self.child_renn
+    def eva_lu_ation(self):
+        return random.choice([-1, 1])
+    def g_childd(self):
+        return []
+<a name="2"></a><font color="#0000FF"><a href="match131-0.html#2" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_10.gif"/></a>
+
+def abb_prunn(m, n, x, y, maxx_play):
+    if n == 0 or m.is_teerm():
+        return m.eva_lu_ation()
+    if maxx_play:
+        va_lue = float('-inf')
+        for child_renn in m.g_childd():
+            va_lue = max(va_lue, abb_prunn(child_renn, n-1, x, y, False))
+            x = max(x, va_lue)
+</font>            if y &lt;= x:
+                break
+        return va_lue
+<a name="1"></a><font color="#00FF00"><a href="match131-0.html#1" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_11.gif"/></a>
+
+    else:
+        va_lue = float('inf')
+        for child_renn in m.g_childd():
+            va_lue = min(va_lue, abb_prunn(child_renn, n-1, x, y, True))
+            y = min(y, va_lue)
+            if y &lt;= x:
+                break
+        return va_lue
+def simu_game(inp):
+    ro_ot = Node("ro_ot") 
+    play_ed = 0
+</font>    curr_player = inp
+    rr = []
+    while play_ed &lt; 3:  
+        r = abb_prunn(ro_ot, 5, float('-inf'), float('inf'), curr_player == 1)
+        if r == 1:
+            winner = "Sub-Zero"
+        else:
+            winner = "Scorpion"
+        rr.append(f"Winner of Round {play_ed + 1}: {winner}")
+        curr_player = 1 if curr_player == 0 else 0
+        play_ed += 1
+    game_winner = "Scorpion" if curr_player == 1 else "Sub-Zero"
+    print(f"Game Winner: {game_winner}")
+    print(f"Total Rounds Played: {play_ed}")
+    for round_r in rr:
+        print(round_r)
+input_file=open(" ")
+for i in input_file:
+    temp= i.split(" ")
+    for k in temp:
+        arr.append(int(k))
+for i in arr:
+    simu_game(i)
+    
+    
+    
+
+#Task 2
+arr=[]
+<a name="0"></a><font color="#FF0000"><a href="match131-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_24.gif"/></a>
+
+def pacman___game(c):
+    le_af = [3,6,2,3,7,1,2,0]
+    l_l = [min(le_af[0:2]), min(le_af[2:4])]
+    l_r = [min(le_af[4:6]), min(le_af[6:8])]
+    maaxx_l = max(l_l)
+    maaxx_r = max(l_r)
+    ndm = max(maaxx_r,maaxx_l)
+    dml = max(le_af[0:4]) - c
+    dmr = max(le_af[4:8]) - c
+    udm = max(dmr,dml)
+    if udm &gt; ndm:
+        return f"The new minimax value is {udm}. Pacman goes right and uses dark magic."
+    else:
+        return f"The minimax value is {ndm}. Pacman does not use dark magic."
+</font>input_file=open("  ")
+for i in input_file:
+    temp= i.split(" ")
+    for k in temp:
+        arr.append(int(k))
+for i in arr:
+    print(pacman___game(i))</pre>
+</body>
+</html>

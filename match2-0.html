@@ -1,0 +1,195 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/5/21101114_5_UMME_FATEMA_LAMIA.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/5/21101114_5_UMME_FATEMA_LAMIA.py<p></p><pre>
+#Task-1
+
+<a name="1"></a><font color="#00FF00"><a href="match2-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_16.gif"/></a>
+
+import random
+
+class GameNode:
+    def __init__(self, data=None):
+        self.data = data  
+        self.branches = [] 
+
+    def attach_branch(self, branch):
+        self.branches.append(branch)
+
+def generate_game_structure(depth, player):
+
+    game_node = GameNode()
+
+    if depth == 0:
+        game_node.data = random.choice([-1, 1]) 
+    else:
+        branch1 = generate_game_structure(depth - 1, 1 - player)
+        branch2 = generate_game_structure(depth - 1, 1 - player)
+        game_node.attach_branch(branch1)
+        game_node.attach_branch(branch2)
+
+    return game_node
+
+def minimax_strategy(game_node, depth, low, high, is_maximizing):
+    if depth == 0 or not game_node.branches:
+        return game_node.data
+
+    if is_maximizing:
+        optimal = float('-inf')
+        for branch in game_node.branches:
+</font>            evaluation = minimax_strategy(branch, depth - 1, low, high, False)
+            optimal = max(optimal, evaluation)
+            low = max(low, evaluation)
+            if high &lt;= low:
+                break
+        return optimal
+    else:
+        optimal = float('inf')
+        for branch in game_node.branches:
+            evaluation = minimax_strategy(branch, depth - 1, low, high, True)
+<a name="0"></a><font color="#FF0000"><a href="match2-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_74.gif"/></a>
+
+            optimal = min(optimal, evaluation)
+            high = min(high, evaluation)
+            if high &lt;= low:
+                break
+        return optimal
+
+def video_game_simulation(initial_player):
+    victories = {"Scorpion": 0, "Sub-Zero": 0}
+    outcomes = []
+    player = initial_player
+
+    for match in range(1, 4):
+        strategy_tree = generate_game_structure(5, player)
+        outcome = minimax_strategy(strategy_tree, 5, float('-inf'), float('inf'), player == 1)
+
+        if outcome == -1:
+            winner = "Scorpion"
+        else:
+            winner = "Sub-Zero"
+
+        victories[winner] += 1
+        outcomes.append((match, winner))
+
+        if victories["Scorpion"] == 2 or victories["Sub-Zero"] == 2:
+            break
+
+        player = 1 - player
+
+    if victories["Scorpion"] &gt; victories["Sub-Zero"]:
+        champion = "Scorpion"
+    else:
+        champion = "Sub-Zero"
+
+    print(f"Champion: {champion}")
+    print(f"Matches Completed: {len(outcomes)}")
+    for match, winner in outcomes:
+        print(f"Match {match} Winner: {winner}")
+
+selected_player = int(input("Select the initial player (0 for Scorpion, 1 for Sub-Zero): "))
+video_game_simulation(selected_player)
+
+#Task-2
+
+class TreeVertex:
+    def __init__(self, optimizing_max):
+        self.optimizing_max = optimizing_max
+        self.node_value = None
+        self.child_a = None
+        self.child_b = None
+
+def construct_decision_tree(level, scores, position=0, optimizing_max=True):
+    vertex = TreeVertex(optimizing_max)
+    if level == 0:
+        vertex.node_value = scores[position]
+        return vertex, position + 1
+
+    vertex.child_a, new_position = construct_decision_tree(level - 1, scores, position, not optimizing_max)
+    vertex.child_b, new_position = construct_decision_tree(level - 1, scores, new_position, not optimizing_max)
+    return vertex, new_position
+
+def maximize(vertex, lower, upper, magic_spell):
+    max_value = float('-inf')
+    Path = "Child A"
+    eval_a, _ = minimax_decision(vertex.child_a, lower, upper, False, magic_spell)
+    max_value = max(max_value, eval_a)
+    lower = max(lower, max_value)
+
+    if upper &lt;= lower:
+        return max_value, Path
+
+    eval_b, _ = minimax_decision(vertex.child_b, lower, upper, False, magic_spell)
+    if eval_b &gt; eval_a:
+        Path = 'Child B'
+    else:
+        Path = 'Child A'
+
+    max_value = max(max_value, eval_b)
+    lower = max(lower, max_value)
+
+    if upper &lt;= lower:
+        return max_value, Path
+
+    return max_value, Path
+
+def minimize(vertex, lower, upper):
+    min_value = float('inf')
+    Path = "Child A"
+
+    eval_a, _ = minimax_decision(vertex.child_a, lower, upper, True)
+    min_value = min(min_value, eval_a)
+    upper = min(upper, min_value)
+
+    if upper &lt;= lower:
+        return min_value, Path
+
+    eval_b, _ = minimax_decision(vertex.child_b, lower, upper, True)
+    if eval_b &lt; eval_a:
+        Path = 'Child B'
+    else:
+        Path = 'Child A'
+
+    min_value = min(min_value, eval_b)
+    upper = min(upper, min_value)
+
+    if upper &lt;= lower:
+        return min_value, Path
+
+    return min_value, Path
+
+def minimax_decision(vertex, lower, upper, is_maximizing, magic_spell=False):
+    if magic_spell:
+        is_maximizing = True
+
+    if vertex.child_a is None and vertex.child_b is None:
+        return vertex.node_value, None
+
+    if is_maximizing:
+        return maximize(vertex, lower, upper, magic_spell)
+    else:
+        return minimize(vertex, lower, upper)
+
+scores = [3, 6, 2, 3, 7, 1, 2, 0]
+decision_tree_root, _ = construct_decision_tree(3, scores)
+
+lower = float('-inf')
+upper = float('inf')
+
+with open("input.txt", "r") as input_file, open("output.txt", "w") as output_file:
+    game_cost = int(input_file.readline())
+    base_result = minimax_decision(decision_tree_root, lower, upper, True, False)
+    magic_result = minimax_decision(decision_tree_root, lower, upper, True, True)
+    magic_adjusted_value = magic_result[0] - game_cost
+    if base_result[0] &gt; magic_adjusted_value:
+        output_file.write(f"The minimax value is {str(base_result[0])}. Pacman does not use dark magic.")
+    else:
+        output_file.write(f"The new minimax value is {magic_adjusted_value}. Pacman goes {magic_result[1]} and uses dark magic.")
+</font>
+
+</pre>
+</body>
+</html>

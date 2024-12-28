@@ -1,0 +1,156 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/6/21301235_Kazi_Fardin_Ahmed_CSE422_06_Assignment03_Fall2024__-_KAZI_FARDIN_AHMED.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/11/21301628_Samin_Haque_CSE422_11_Lab_Assignment3_Fall2024.py<p></p><pre>
+#task-1
+<a name="1"></a><font color="#00FF00"><a href="match36-0.html#1" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_33.gif"/></a>
+
+ALPHA, BETA = 2, -2
+
+
+class MiniMax:
+    def __init__(self, tree, max_depth = 5):
+        self.game_tree = tree
+        self.max_depth = max_depth
+        self.rounds_played = 0
+        self.round_results = []
+
+    def alpha_beta_pruning(self, depth, nodeIndex, maximizingPlayer, 
+                values, alpha, beta): 
+
+        if depth == self.max_depth: 
+            self.rounds_played += 1 
+            self.round_results.append(-1 if values[nodeIndex] == -1 else 1)
+            return values[nodeIndex]
+
+        if maximizingPlayer:
+            best = BETA
+
+            for i in range(0, 2): 
+                val = self.alpha_beta_pruning(depth + 1, nodeIndex * 2 + i, False, values, alpha, beta) 
+                best = max(best, val) 
+                alpha = max(alpha, best) 
+
+                if beta &lt;= alpha: 
+                    break
+            
+            return best 
+        
+        else:
+            best = ALPHA
+
+            for i in range(0, 2): 
+                val = self.alpha_beta_pruning(depth + 1, nodeIndex * 2 + i, True, values, alpha, beta) 
+                best = min(best, val) 
+                beta = min(beta, best) 
+
+                if beta &lt;= alpha: 
+                    break
+            
+            return best 
+
+    def determine_winner(self, starting_player):
+        maximizing_player = True if starting_player == 0 else False
+        self.alpha_beta_pruning(0, 0, maximizing_player, self.game_tree, BETA, ALPHA)
+</font>        return self.rounds_played, self.round_results
+
+
+<a name="2"></a><font color="#0000FF"><a href="match36-0.html#2" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_7.gif"/></a>
+
+leaf_values = [-1, -1, -1, -1, 1, -1, -1, -1, 1, 1, 1, 1, 1, -1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, 1, 1, -1, -1] 
+MortalKombat = MiniMax(leaf_values)
+</font>total_rounds, round_winners =  MortalKombat.determine_winner(int(input()))
+
+print("Game Winner", 'Scorpion' if round_winners.count(-1) &gt; round_winners.count(1) else "Sub-Zero")
+print(f'Total Rounds Played: {total_rounds}\n')
+
+for i in range(total_rounds):
+    round_winner = ''
+    round_winner = "Scorpion" if round_winners[i] == -1 else 'Sub-Zero'
+    print(f"Winner of Round {i + 1}", round_winner)
+
+
+#task-2
+
+MAX, MIN = float('inf'), float('-inf')
+
+
+<a name="0"></a><font color="#FF0000"><a href="match36-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_35.gif"/></a>
+
+def alpha_beta_pruning(depth, nodeIndex, maximizingPlayer, values, alpha, beta): 
+
+	if depth == 3: 
+		return values[nodeIndex] 
+
+	if maximizingPlayer: 
+		best = MIN
+
+		for i in range(0, 2): 
+			
+			val = alpha_beta_pruning(depth + 1, nodeIndex * 2 + i, False, values, alpha, beta) 
+			best = max(best, val) 
+			alpha = max(alpha, best) 
+
+			if beta &lt;= alpha: 
+				break
+		
+		return best 
+	
+	else:
+		best = MAX
+
+		for i in range(0, 2): 
+		
+			val = alpha_beta_pruning(depth + 1, nodeIndex * 2 + i, True, values, alpha, beta) 
+			best = min(best, val) 
+			beta = min(beta, best) 
+
+			if beta &lt;= alpha: 
+				break
+		
+		return best 
+	
+
+leaf_values = [3, 6, 2, 3, 7, 1, 2, 0]
+without_magic = alpha_beta_pruning(0, 0, True, leaf_values, MIN, MAX)
+
+
+def onlymax_checkAdvantage(depth, nodeIndex, values, alpha, beta): 
+
+        if depth == 3: 
+            return values[nodeIndex] 
+        
+        best = MIN
+
+        for i in range(0, 2): 
+
+            val = onlymax_checkAdvantage(depth + 1, nodeIndex * 2 + i, values, alpha, beta) 
+            best = max(best, val) 
+            alpha = max(alpha, best) 
+
+            if beta &lt;= alpha: 
+                break
+			
+        return best 
+
+
+leaf_values = [3, 6, 2, 3, 7, 1, 2, 0]
+with_magic = onlymax_checkAdvantage(0, 0, leaf_values, MIN, MAX)
+
+cost = int(input())
+</font>check_magical_advantage = with_magic - cost
+
+if check_magical_advantage &lt; without_magic:
+	print(f"The minimax value is {without_magic}. Pacman does not use dark magic")
+
+else:
+    if check_magical_advantage &gt; 7:
+        print(f'The newminimax value is {with_magic}. Pacman goes right and uses dark magic')
+    else:
+        print(f'The newminimax value is {with_magic - cost}. Pacman goes right and uses dark magic')
+		</pre>
+</body>
+</html>

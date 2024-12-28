@@ -1,0 +1,209 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/5/21101114_5_UMME_FATEMA_LAMIA.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/17/22299179_Farhan_Tanvir_CSE422_17_Assignment03_Fall2024_-_FARHAN_TANVIR.py<p></p><pre>
+#Task1
+<a name="1"></a><font color="#00FF00"><a href="match2-0.html#1" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_16.gif"/></a>
+
+import random
+class Node:
+  
+    def __init__(self, value=None):
+        self.value = value  
+        self.children = [] 
+
+    def add_child(self, child):
+        self.children.append(child)
+
+def build_game_tree(depth, current_player):
+
+    node = Node()
+
+    if depth == 0:  
+        node.value = random.choice([-1, 1]) 
+    else:
+       
+        child1 = build_game_tree(depth - 1, 1 - current_player)
+        child2 = build_game_tree(depth - 1, 1 - current_player)
+        node.add_child(child1)
+        node.add_child(child2)
+
+    return node
+
+def alpha_beta_pruning(node, depth, alpha, beta, maximizing_player):
+    if depth == 0 or not node.children:  
+        return node.value
+
+    if maximizing_player:
+        max_eval = float('-inf')
+        for child in node.children:
+</font>            eval = alpha_beta_pruning(child, depth - 1, alpha, beta, False)
+            max_eval = max(max_eval, eval)
+            alpha = max(alpha, eval)
+            if beta &lt;= alpha:  
+                break
+        return max_eval
+    else:
+        min_eval = float('inf')
+        for child in node.children:
+            eval = alpha_beta_pruning(child, depth - 1, alpha, beta, True)
+<a name="0"></a><font color="#FF0000"><a href="match2-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_74.gif"/></a>
+
+            min_eval = min(min_eval, eval)
+            beta = min(beta, eval)
+            if beta &lt;= alpha:  
+                break
+        return min_eval
+
+def mortal_kombat_with_tree(starting_player):
+    rounds_won = {"Scorpion": 0, "Sub-Zero": 0}
+    round_results = []
+    current_player = starting_player
+
+    for round_num in range(1, 4):  
+   
+        game_tree = build_game_tree(5, current_player)
+        result = alpha_beta_pruning(game_tree, 5, float('-inf'), float('inf'), current_player == 1)
+
+        if result == -1:
+            round_winner = "Scorpion"
+        else:
+            round_winner = "Sub-Zero"
+
+        rounds_won[round_winner] += 1
+        round_results.append((round_num, round_winner))
+
+        if rounds_won["Scorpion"] == 2 or rounds_won["Sub-Zero"] == 2:
+            break
+
+        current_player = 1 - current_player
+
+    if rounds_won["Scorpion"] &gt; rounds_won["Sub-Zero"]:
+        game_winner = "Scorpion"
+    else:
+        game_winner = "Sub-Zero"
+
+    print(f"Game Winner: {game_winner}")
+    print(f"Total Rounds Played: {len(round_results)}")
+    for round_num, round_winner in round_results:
+        print(f"Winner of Round {round_num}: {round_winner}")
+
+
+starting_player = int(input("Enter starting player (0 for Scorpion, 1 for Sub-Zero): "))
+mortal_kombat_with_tree(starting_player)
+
+#Task2
+class Node:
+    def __init__(self, is_maximizing):
+        self.is_maximizing = is_maximizing
+        self.value = None
+        self.left = None
+        self.right = None
+
+
+def build_tree(depth, outcomes, index=0, is_maximizing=True):
+ 
+    node = Node(is_maximizing)
+    if depth == 0: 
+        node.value = outcomes[index]
+        return node, index + 1
+
+ 
+    node.left, next_index = build_tree(depth - 1, outcomes, index, not is_maximizing)
+    node.right, next_index = build_tree(depth - 1, outcomes, next_index, not is_maximizing)
+    return node, next_index
+
+
+def maximizing(node, alpha, beta,dark_magic):
+  
+    max_eval = float('-inf')
+    Direction = "Left"
+    eval_left,_ = alpha_beta(node.left, alpha, beta, False, dark_magic)
+    max_eval = max(max_eval, eval_left)
+    alpha = max(alpha, max_eval)
+
+    if beta &lt;= alpha: 
+        return max_eval, Direction
+
+
+    eval_right,_ = alpha_beta(node.right, alpha, beta, False, dark_magic)
+    if eval_right&gt;eval_left:
+        Direction = 'Right'
+    else:
+        Direction = 'Left'
+    
+    max_eval = max(max_eval, eval_right)
+    alpha = max(alpha, max_eval)
+
+    if beta &lt;= alpha: 
+        return max_eval, Direction
+
+    return max_eval, Direction
+
+
+def minimizing(node, alpha, beta):
+    
+    min_eval = float('inf')
+    Direction = "Left"
+    
+    
+    eval_left,_ = alpha_beta(node.left, alpha, beta, True)
+    min_eval = min(min_eval, eval_left)
+    beta = min(beta, min_eval)
+
+    if beta &lt;= alpha:  
+        return min_eval, Direction
+
+    eval_right,_ = alpha_beta(node.right, alpha, beta, True)
+    if eval_right &lt; eval_left:
+        Direction = 'Right'
+    else:
+        Direction = 'Left'
+    
+    min_eval = min(min_eval, eval_right)
+    beta = min(beta, min_eval)
+
+    if beta &lt;= alpha:  
+        return min_eval, Direction
+
+    return min_eval, Direction
+
+
+
+def alpha_beta(node, alpha, beta, maximizing_player, dark_magic=False):
+    if dark_magic:
+            maximizing_player = True
+  
+    if node.left is None and node.right is None:  
+        return node.value,None
+
+    if maximizing_player: 
+        return maximizing(node, alpha, beta, dark_magic)
+    else:  
+       return minimizing(node, alpha, beta)
+
+
+
+outcomes = [3, 6, 2, 3, 7, 1, 2, 0]
+tree_root, _ = build_tree(3, outcomes)
+
+alpha = float('-inf')
+beta = float('inf')
+
+with open("input.txt", "r") as file1 , open("output.txt", "w") as file2:
+    cost = int(file1.readline())
+    result1 = alpha_beta(tree_root, alpha, beta, True, False) 
+    result2 = alpha_beta(tree_root, alpha, beta, True, True)
+    result2_value=result2[0]-cost
+    if result1[0]&gt;result2_value:
+        file2.write(f"The minimax value is {str(result1[0])}. Pacman does not use dark magic.")
+    else:
+        file2.write(f"The new minimax value is {result2_value}. Pacman goes {result2[1]} and uses dark magic.")
+</font>
+
+</pre>
+</body>
+</html>

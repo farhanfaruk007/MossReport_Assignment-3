@@ -1,0 +1,154 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/15/22101446_MD_Touhidur_Rahman_CSE422_15_Lab_Assignment03_Fall2024_-_MD_TOUHIDUR_RAHMAN.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/15/22101446_MD_Touhidur_Rahman_CSE422_15_Lab_Assignment03_Fall2024_-_MD_TOUHIDUR_RAHMAN.py<p></p><pre>
+#Task_1
+class Node:
+<a name="2"></a><font color="#0000FF"><a href="match150-1.html#2" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_4.gif"/></a>
+
+    def __init__(self, player, parent=None, child=[]):
+        self.player = player
+        self.parent = parent
+        self.child = child
+        self.value = None
+</font>
+def tree(depth, player, parent=None):
+    node = Node(player, parent)
+    if depth == 0:        
+        if player == 0: #If player is scorpion
+            node.value = -1
+        else:
+            node.value = 1
+    else:
+        if player == 1:
+            node.child = [Node(0, node), Node(0, node)]
+        else:
+            node.child = [Node(1, node), Node(1, node)] # Two scorpion child
+        for i in node.child:
+            tree(depth - 1, i.player, node)
+    return node
+
+<a name="1"></a><font color="#00FF00"><a href="match150-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_8.gif"/></a>
+
+def alpha_beta(node, alpha, beta, is_max):
+    if node.value is not None:
+        return node.value
+
+    if is_max:
+        best = -float('inf')
+        for child in node.child:
+            best = max(best, alpha_beta(child, alpha, beta, False))
+            alpha = max(alpha, best)
+            if alpha &gt;= beta:
+</font>                return best
+    else:
+        best = float('inf')
+        for child in node.child:
+            best = min(best, alpha_beta(child, alpha, beta, True))
+            beta = min(beta, best)
+            if alpha &gt;= beta:
+                return best
+
+    return best
+
+
+def main_game(begin):
+    if begin not in [0, 1]:
+        print("Invalid")
+        return
+    g_t = tree(5, begin)
+    number_of_round = 3
+<a name="0"></a><font color="#FF0000"><a href="match150-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_17.gif"/></a>
+
+    match_win = []
+    present_node = g_t
+    for i in range(number_of_round):
+        matche_winner = alpha_beta(present_node, -float('inf'), float('inf'), present_node.player) #Find the match winner 
+        if present_node.player == 0:
+            if matche_winner == -1:
+                match_win.append("Scorpion")
+            else:
+                match_win.append("Sub-Zero")
+        else:
+            if matche_winner == 1:
+                match_win.append("Sub-Zero")
+            else:
+                match_win.append("Scorpion")
+                      
+        if present_node.child:
+            if matche_winner == -1:
+                present_node = present_node.child[0]
+            else:
+                present_node = present_node.child[1]
+        else:
+            pass
+
+    if match_win[-1] == "Scorpion":
+</font>        game_winner = "Scorpion"
+    else:
+        game_winner = "Sub-Zero"
+
+    print("Game Winner:", game_winner)
+
+
+    print("Total Rounds Played:", len(match_win))
+    for i in range(len(match_win)):
+        print(f"Winner of Round {i+1}: {match_win[i]}")
+
+def Mkbat():
+    start = int(input("Enter which player start first (0 for Scorpion, 1 for Sub-Zero): "))
+    main_game(start)
+
+Mkbat()
+
+
+
+#Task_2
+def minimax(node, depth, is_maximizing_player, vals, alpha, beta):
+    if depth == 3:  
+        return vals[node]
+
+    if is_maximizing_player:  
+        better_value = -float('inf')
+        for i in range(2):
+            val = minimax(2 * node + i, depth + 1, False, vals, alpha, beta)
+            better_value = max(better_value, val)
+            alpha = max(alpha, better_value)
+            if beta &lt;= alpha:  
+                break
+        return better_value
+    else: 
+        better_value = float('inf')
+        for i in range(2):
+            val = minimax(2 * node + i, depth + 1, True, vals, alpha, beta)
+            better_value = min(better_value, val)
+            beta = min(beta, better_value)
+            if beta &lt;= alpha: 
+                break
+        return better_value
+
+def pacman_game(c):
+    values = [3, 6, 2, 3, 7, 1, 2, 0]  
+
+    root_value_no_magic = minimax(0, 0, True, values, -float('inf'), float('inf'))
+      
+    score_left_with_magic = 6 - c
+    score_right_with_magic = 7 - c
+
+    if score_left_with_magic &gt; root_value_no_magic and score_right_with_magic &gt; root_value_no_magic:
+        if score_right_with_magic &gt; score_left_with_magic:
+            print(f"The new minimax value is {score_right_with_magic}. Pacman goes right and uses dark magic.")
+        else:
+            print(f"The new minimax value is {score_left_with_magic}. Pacman goes left and uses dark magic.")
+    else:
+        print(f"The minimax value is {root_value_no_magic}. Pacman does not use dark magic.")
+
+c = int(input("Enter the cost of using dark magic (c): "))
+pacman_game(c)
+
+</pre>
+</body>
+</html>

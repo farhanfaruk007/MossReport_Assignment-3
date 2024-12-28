@@ -1,0 +1,153 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/7/22101830_Tarek_Alam_Bhuiyan_CSE422_07_Assignment03_Fall2024_-_Tarek_Alam_Bhuiyan.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/7/22101830_Tarek_Alam_Bhuiyan_CSE422_07_Assignment03_Fall2024_-_Tarek_Alam_Bhuiyan.py<p></p><pre>
+# ID : 22101830 Section : 07 Name : Tarek Alam Bhuiyan
+
+#Part1
+
+import random
+
+def alpha_beta_pruning(depth, is_maximizing, alpha, beta, current_player):
+
+    if depth == 0:
+<a name="1"></a><font color="#00FF00"><a href="match84-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_24.gif"/></a>
+
+        return random.choice([-1, 1])
+
+
+    if is_maximizing:
+        max_node = float('-inf')
+        for i in range(2):  # since branching factor is given 2
+            value = alpha_beta_pruning(depth - 1, False, alpha, beta, 1 - current_player)
+            max_node = max(max_node, value)
+            alpha = max(alpha, value)
+            if beta &lt;= alpha:  # The branch is pruned if this condition is met
+                break
+        return max_node
+
+    else:
+        min_node = float('inf')
+        for i in range(2):  # Since Branching factor is given 2
+            value = alpha_beta_pruning(depth - 1, True, alpha, beta, 1 - current_player)
+            min_node = min(min_node, value)
+            beta = min(beta, value)
+            if beta &lt;= alpha:  # The branch is pruned if this condition is met
+                break
+        return min_node
+
+
+def mortal_kombat_simulation(start_player):
+    current_player = start_player
+    rounds = []
+    for round_num in range(3):  # 3 Rounds is played in a usual mortal kombat match
+        winner = alpha_beta_pruning(5, current_player, float('-inf'), float('inf'), current_player)
+</font>        if winner == -1:
+            rounds.append("Scorpion")
+        else:
+            rounds.append("Sub-Zero")
+        current_player = 1 - current_player  # To alternate turns after each move is played
+
+    scorpion_wins = rounds.count("Scorpion")
+    subzero_wins = rounds.count("Sub-Zero")
+
+    if scorpion_wins &gt; subzero_wins:
+      game_winner = "Scorpion"
+    else:
+      game_winner = "Sub-Zero"
+
+    #Showing the final results
+<a name="2"></a><font color="#0000FF"><a href="match84-1.html#2" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_14.gif"/></a>
+
+    print(f"Game Winner: {game_winner}")
+    print(f"Total Rounds Played: {len(rounds)}")
+    for i, round_winner in enumerate(rounds, start=1):
+        print(f"Winner of Round {i}: {round_winner}")
+
+
+start_player = int(input("Enter 0 for Scorpion, Enter 1 for Sub-Zero: "))
+
+if start_player == 0:
+  print("Scorpion Starts!")
+elif start_player == 1:
+  print("Sub-Zero Starts!")
+
+print("")
+
+mortal_kombat_simulation(start_player)
+
+
+#----------------------------------------------------------------------------------------------------
+
+#Part2
+
+import random
+
+outcome_scores = [3, 6, 2, 3, 7, 1, 2, 0] # List of possible outcomes
+
+
+#minimax algo
+
+def minimax(depth, index, is_maximizing_player, alpha, beta):
+
+    if depth == 3:
+</font>        return outcome_scores[index]
+
+
+    if is_maximizing_player:
+        max_score = float('-inf')
+
+        for i in range(2):
+            score = minimax(depth + 1, index * 2 + i, False, alpha, beta)
+            max_score = max(max_score, score)
+            alpha = max(alpha, max_score)
+            if beta &lt;= alpha:
+                break
+        return max_score
+
+    else:
+        min_score = float('inf')
+
+        for i in range(2):
+            score = minimax(depth + 1, index * 2 + i, True, alpha, beta)
+            min_score = min(min_score, score)
+<a name="0"></a><font color="#FF0000"><a href="match84-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_25.gif"/></a>
+
+            beta = min(beta, min_score)
+            if beta &lt;= alpha:
+                break
+        return min_score
+
+def minimax_with_magic_cost(magic_cost):
+    # 0,1 refers to the left side and 1,2 refers to the right side since branching factor is 2
+    sides = [0, 1, 2, 3]
+
+    # scores for left and right sides without magic
+    left_scores = [minimax(2, i, True, -float('inf'), float('inf')) for i in sides[:2]]
+    right_scores = [minimax(2, i, True, -float('inf'), float('inf')) for i in sides[2:]]
+
+    # adding magic cost to left and right sides
+    left_with_magic = max(left_scores) - magic_cost
+    right_with_magic = max(right_scores) - magic_cost
+
+    # maximum score considering the magic cost
+    return max(left_with_magic, right_with_magic)
+
+
+def pacman_game(magic_cost):
+
+    regular_minimax_value = minimax(0, 0, True, -float('inf'), float('inf'))
+    minimax_with_magic_value = minimax_with_magic_cost(magic_cost)
+
+    if minimax_with_magic_value &gt; regular_minimax_value:
+        print(f"The new minimax value is {minimax_with_magic_value}. Pacman goes right and uses dark magic.")
+    else:
+        print(f"The new minimax value is {regular_minimax_value}. Pacman does not use dark magic.")
+
+magic_cost = int(input("Enter the cost of using dark magic (c): "))
+pacman_game(magic_cost)</font></pre>
+</body>
+</html>

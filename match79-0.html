@@ -1,0 +1,97 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/14/21101005_cse422_14_labassign3_-_Afnan_Mohammed.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/14/21101005_cse422_14_labassign3_-_Afnan_Mohammed.py<p></p><pre>
+#########task 1###########
+import random
+
+<a name="2"></a><font color="#0000FF"><a href="match79-1.html#2" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_11.gif"/></a>
+
+class MortalGame:
+    def __init__(self, fir_plyr):
+        self.fir_plyr = fir_plyr
+        self.plars = ["Scorpion", "Sub-Zero"]
+        self.tot_rou = 3
+        self.rouns = []
+
+
+    def al_be_pru(self, deth, maxia_plyr):
+        if deth == 0:
+</font>            ashbe = self.opinion()
+            return ashbe
+
+<a name="3"></a><font color="#00FFFF"><a href="match79-1.html#3" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_3_9.gif"/></a>
+
+        chek = []
+        for mi in range(2):
+            wer = self.al_be_pru(deth - 1, not maxia_plyr)
+            chek.append(wer)
+
+        if maxia_plyr:
+            return max(chek)
+        else:
+            return min(chek)
+</font>    def opinion(self):
+        mer = random.choice([-1, 1])
+        return mer
+
+<a name="1"></a><font color="#00FF00"><a href="match79-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_15.gif"/></a>
+
+    def gamekhele(self):
+        for _ in range(self.tot_rou):
+            champ_h = self.al_be_pru(5, self.fir_plyr == 0)
+            self.rouns.append("Scorpion" if champ_h == -1 else "Sub-Zero")
+        yer = "Scorpion" if self.rouns.count("Scorpion") &gt; self.rouns.count("Sub-Zero") else "Sub-Zero"
+        return yer
+</font>
+
+fie_in = open('iinput.txt', 'r')
+<a name="0"></a><font color="#FF0000"><a href="match79-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_49.gif"/></a>
+
+shurukorse = int(fie_in.read().strip())
+
+gameeb = MortalGame(shurukorse)
+gameeb_champ_h = gameeb.gamekhele()
+
+print(f"Game Winner: {gameeb_champ_h}")
+print(f"Total Rounds Played: {gameeb.tot_rou}")
+for mi in range(gameeb.tot_rou):
+    print(f"Winner of Round {mi + 1}: {gameeb.rouns[mi]}")
+
+
+
+########task 2##########
+
+def pacman_gamemag(c):
+    vale_lef = [3, 6, 2, 3, 7, 1, 2, 0]
+    ashbe = minimmaxi(0, 0, True, vale_lef, float('-inf'), float('inf'))
+
+    dark_magicleft = vale_lef[1] - c
+    dark_magicright = vale_lef[4] - c
+    bhalo_dark_magic = max(dark_magicleft, dark_magicright)
+
+    dark_magic = max(bhalo_dark_magic, max(vale_lef[:4]) - c, max(vale_lef[4:]) - c)
+    neh = f"The new minimax value is {dark_magic if dark_magic &gt; ashbe else ashbe}. Pacman {'goes right and uses' if dark_magic &gt; ashbe else 'does not use'} dark magic"
+    return neh
+
+def minimmaxi(deth, inex, i_maxi, vale, alph, bet):
+    if deth == 3:
+        return vale[inex]
+
+    bhalo = float('-inf') if i_maxi else float('inf')
+    for mi in range(2):
+        vale = minimmaxi(deth + 1, inex * 2 + mi, not i_maxi, vale, alph, bet)
+        bhalo = max(bhalo, vale) if i_maxi else min(bhalo, vale)
+        alph, bet = max(alph, bhalo), min(bet, bhalo)
+        if bet &lt;= alph:
+            break
+    return bhalo
+
+print(pacman_gamemag(2))
+</font>
+</pre>
+</body>
+</html>

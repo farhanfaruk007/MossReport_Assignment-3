@@ -1,0 +1,144 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/9/21341026_LAB3_SEC9_HUMAYERA_-_HUMAYERA_SHAYERA_HURI.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/9/21341026_LAB3_SEC9_HUMAYERA_-_HUMAYERA_SHAYERA_HURI.py<p></p><pre>
+#part 1
+import random
+
+<a name="0"></a><font color="#FF0000"><a href="match17-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_61.gif"/></a>
+
+random.seed(0)
+
+class GameNode:
+    def __init__(self, player, depth, utility=0):
+        self.player = player
+        self.depth = depth
+        self.utility = utility
+        self.children = []
+
+def alpha_beta_pruning(node, alpha, beta, is_maximizing_player):
+    if node.depth == 0 or node.utility != 0:
+        return node.utility, node
+
+    if is_maximizing_player:
+        value = -float('inf')
+        best_child = None
+        for child in node.children:
+            child_value, _ = alpha_beta_pruning(child, alpha, beta, False)
+            if child_value &gt; value:
+                value = child_value
+                best_child = child
+            alpha = max(alpha, value)
+            if beta &lt;= alpha:
+                break  # Beta cutoff
+        return value, best_child
+    else:
+        value = float('inf')
+        best_child = None
+        for child in node.children:
+            child_value, _ = alpha_beta_pruning(child, alpha, beta, True)
+            if child_value &lt; value:
+                value = child_value
+                best_child = child
+            beta = min(beta, value)
+            if beta &lt;= alpha:
+                break
+        return value, best_child
+
+def create_game_tree(starting_player, max_depth):
+    root = GameNode(starting_player, max_depth)
+    _create_tree_recursive(root, max_depth - 1)
+    return root
+
+def _create_tree_recursive(node, depth):
+    if depth == 0:
+        node.utility = random.choice([-1, 1])
+        return
+
+    for _ in range(2):
+        child = GameNode(1 - node.player, depth - 1)
+        node.children.append(child)
+        _create_tree_recursive(child, depth - 1)
+
+def simulate_game(starting_player):
+    max_depth = 5
+
+    round_winners = []
+    current_player = starting_player
+    rounds_played = 0
+
+    while rounds_played &lt; 3:
+        root = create_game_tree(current_player, max_depth)
+        utility, _ = alpha_beta_pruning(root, -float('inf'), float('inf'), current_player == 1)
+
+        if utility == -1:
+            round_winners.append("Scorpion")
+        else:
+            round_winners.append("Sub-Zero")
+
+        current_player = 1 - current_player
+        rounds_played += 1
+
+    game_winner = round_winners[-1]
+    return game_winner, rounds_played, round_winners
+
+starting_player = int(input())
+game_winner, rounds_played, round_winners = simulate_game(starting_player)
+
+print("Game Winner:", game_winner)
+print("Total Rounds Played:", rounds_played)
+for i, round_winner in enumerate(round_winners):
+    print(f"Winner of Round {i + 1}: {round_winner}")
+
+#part 2
+class GameNode:
+    def __init__(self, value, children=[]):
+</font>
+      self.value = value
+      if children == []:
+
+<a name="1"></a><font color="#00FF00"><a href="match17-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_33.gif"/></a>
+
+        self.children = []
+      else:
+        self.children = children
+
+def alpha_beta_pruning(node, a, b, is_maximizing_Player):
+    if not node.children:
+        return node.value
+
+    if is_maximizing_Player:
+        value = -float('inf')
+        for child in node.children:
+            value = max(value, alpha_beta_pruning(child, a, b, False))
+            alpha = max(a, value)
+            if b &lt;= alpha:
+                break
+        return value
+    else:
+        value = float('inf')
+        for child in node.children:
+            value = min(value, alpha_beta_pruning(child, a, b, True))
+            beta = min(b, value)
+            if beta &lt;= a:
+                break
+        return value
+
+def pacman_game(c):
+    root = GameNode(0)
+    root.children = [GameNode(0), GameNode(0)]
+    root.children[0].children = [GameNode(3), GameNode(6)]
+    root.children[1].children = [GameNode(2), GameNode(7), GameNode(1), GameNode(2), GameNode(0)]
+    minimax_value = alpha_beta_pruning(root, -float('inf'), float('inf'), True)
+    if minimax_value &lt; 7 - c:
+        return f"The new minimax value is {7 - c}. Pacman goes right and uses dark magic"
+    else:
+        return f"The minimax value is {minimax_value}. Pacman does not use dark magic"
+
+print(pacman_game(2))
+</font>print(pacman_game(5))</pre>
+</body>
+</html>

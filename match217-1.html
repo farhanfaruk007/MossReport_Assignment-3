@@ -1,0 +1,140 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/7/20101526_sharmistharoy_cse422_07_assignment03_fall2024_-_SHARMISTHA_ROY.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/18/21201143_Mahima_Islam_CSE422_18_Assignment03_Fall2024_-_MAHIMA_ISLAM.py<p></p><pre>
+#part 1
+import random
+class Mortal_Comabat:
+    def __init__(self,input_player):
+        self.input_player= input_player
+        self.depth = 5
+        self.branch = 2
+        self.utlity_vals = [-1, 1]
+        self.leaf=[random.choice(self.utlity_vals) for i in range(32)]
+        self.win_round = []
+        self.sum_play = 0
+        self.vic_subzero = 0
+        self.vic_scorpion = 0
+       
+
+    def game(self):
+        player_turn = self.input_player
+        maxim_rounds = 5
+
+        while self.sum_play &lt; maxim_rounds:
+            self.sum_play += 1
+            champ = self.alpha_beta_prunning(0,player_turn, float('-inf'), float('inf'), True)
+
+            if champ == -1:
+                self.win_round.append("Scorpion")
+                self.vic_scorpion += 1
+            else:
+                self.win_round.append("Sub-Zero")
+                self.vic_subzero += 1
+
+            if  self.vic_subzero&gt;=3:
+                print(f"Sub-Zero wins the game by winning {self.vic_subzero} rounds!")
+                break
+            elif self.vic_scorpion &gt;= 3:
+                print(f"Scorpion wins the game by winning {self.vic_scorpion} rounds!")
+                break
+
+            player_turn= 1-player_turn 
+
+        if self.vic_scorpion &gt;= 3:
+          victory_by = "Scorpion"
+          return victory_by
+        else:
+          victory_by = "Sub-Zero"
+          return victory_by
+
+<a name="0"></a><font color="#FF0000"><a href="match217-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_22.gif"/></a>
+
+    def alpha_beta_prunning(self, deep, player, alpha, beta, max_flag):
+        if deep == self.depth:
+            return self.leaf[player]
+
+        if max_flag:
+            maxi_val = float('-inf')
+            for x in range(self.branch):
+                eval = self.alpha_beta_prunning(deep + 1, player, alpha, beta, False)
+                maxi_val = max(maxi_val, eval)
+                alpha = max(alpha, eval)
+                if beta &lt;= alpha:
+                    break
+            return maxi_val
+
+        else:
+            mini_val = float('inf')
+            for y in range(self.branch):
+                eval = self.alpha_beta_prunning(deep + 1, 1 - player, alpha, beta, True)
+                mini_val = min(mini_val, eval)
+                beta_val = min(beta, eval)
+                if beta &lt;= alpha:
+                    break
+            return mini_val
+
+input_player = int(input("who is the input player?(0= Scorpion, 1=Sub-Zero): "))
+game_start = Mortal_Comabat(input_player)
+</font>
+game_won = game_start.game()
+
+print(f"Game Winner : {game_won}")
+print(f"Total Rounds Played: {game_start.sum_play}")
+for count, champ in enumerate(game_start.win_round, 1):
+    print(f"Winner of Round {count}: {champ}")
+
+
+
+def pacman_game(c):
+    leaf2 = [3, 6, 2, 3, 7, 1, 2, 0]
+    def mini_max_algo(deep2, idx, max_flag, leaf2, alpha2, beta2):
+        if deep2 == 3:
+            return leaf2[idx]
+        if max_flag:
+            max_player = float('-inf')
+            for i in range(2):
+                eval2 = mini_max_algo(deep2 + 1, idx*2+i, False, leaf2, alpha2, beta2)
+                max_player = max(max_player, eval2)
+                alpha2 = max(alpha2, eval2)
+                if beta2&lt;= alpha2:
+                    break
+            return max_player
+        else:
+            min_player= float('inf')
+            for j in range(2):
+                eval2 = mini_max_algo(deep2 + 1, idx *2+j, True, leaf2, alpha2, beta2)
+                min_player = min(min_player, eval2)
+                beta2 = min(beta2,eval2)
+                if beta2&lt;= alpha2:
+                    break
+            return min_player
+
+    mini_max_val = mini_max_algo(0, 0, True, leaf2, float('-inf'), float('inf'))
+
+    
+    max_right = max(leaf2[4:8])
+    max_left = max(leaf2[0:4])
+
+    right_magic =max_right- c
+    left_magic =max_left- c
+
+
+    if right_magic &gt; left_magic and right_magic &gt; mini_max_val:
+        print(f"The new minimax val is  {right_magic}. Pacman goes right and uses dark magic") 
+    
+    elif left_magic &gt; right_magic and left_magic&gt; mini_max_val:
+        print(f"The new minimax val is {left_magic}. Pacman goes left and uses dark magic")
+    else:
+        print(f"The new minimax val is  {mini_max_val}. Pacman does not use dark magic")
+
+pacman_game(2)
+
+pacman_game(5)
+
+pacman_game(6)</pre>
+</body>
+</html>

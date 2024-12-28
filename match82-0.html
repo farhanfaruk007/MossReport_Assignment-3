@@ -1,0 +1,150 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/14/22101487_CSE422_14_LabAssignment3_-_MD._REDWAN_ISLAM.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/14/22101487_CSE422_14_LabAssignment3_-_MD._REDWAN_ISLAM.py<p></p><pre>
+#============================================== Task-1-========================================
+
+import random
+
+def minMax(depth, node, isMaximizer, leaf, alpha, beta):
+  if depth == 5:
+    return leaf[node]
+  if isMaximizer:
+    maxValue = float('-inf')
+    for i in range(2):
+      value = minMax(depth + 1, node * 2 + i, False, leaf, alpha, beta)
+      maxValue = max(maxValue, value)
+      alpha = max(alpha, value)
+      if beta &lt;= alpha:
+        break
+    return maxValue
+  else:
+    minValue = float('inf')
+    for i in range(2):
+      value = minMax(depth + 1, node * 2 + i, True, leaf, alpha, beta)
+      minValue = min(minValue, value)
+      beta = min(beta, value)
+      if beta &lt;= alpha:
+        break
+    return minValue
+
+def game_winner(startingPlayer):
+  tree_depth = 5
+  leaf_count = 2 ** tree_depth
+  rounds = 3
+  winners = []
+  
+  for round_num in range(rounds):
+    leaf = []
+    for _ in range(leaf_count):
+      leaf.append(random.choice([-1, 1]))
+
+    if startingPlayer == 0:
+      isMaximizer = False
+    else:
+      isMaximizer = True
+
+
+    alpha = float('-inf')
+    beta= float('inf')
+<a name="1"></a><font color="#00FF00"><a href="match82-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_4.gif"/></a>
+
+    roundWinner = minMax(0, 0, isMaximizer, leaf, alpha, beta)
+      
+    if roundWinner == -1:
+      winners.append("Scorpion")
+    else:
+      winners.append("Sub-Zero")
+    
+    startingPlayer = 1 - startingPlayer
+</font>
+  scorpion_wins = winners.count("Scorpion")
+  sub_zero_wins = winners.count("Sub-Zero")
+  
+  if scorpion_wins &gt; sub_zero_wins:
+    game_winner = "Scorpion"
+  else:
+    game_winner = "Sub-Zero"
+
+  
+  print(f"Game Winner: {game_winner}")
+  print(f"Total Rounds Played: {rounds}")
+<a name="0"></a><font color="#FF0000"><a href="match82-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_52.gif"/></a>
+
+  for i, winner in enumerate(winners, 1):
+    print(f"Winner of Round {i}: {winner}")
+
+startingPlayer = int(input("Enter starting player number (0 for Scorpion, 1 for Sub-Zero): "))
+game_winner(startingPlayer)
+
+
+
+#============================================== Task-2-========================================
+import math
+
+def minimax(currDepth, node, isPacmanTurn, leafNodes, treeDepth, darkMagicCost):
+  if (currDepth == treeDepth):
+    return leafNodes[node], False
+
+  if (isPacmanTurn):
+    noDarkMagicLeft = minimax(currDepth+1, node*2, False, leafNodes, treeDepth, darkMagicCost)
+    noDarkMagicRight = minimax(currDepth+1, node*2+1, False, leafNodes, treeDepth, darkMagicCost)
+    
+    noDarkMagicValLeft = noDarkMagicLeft[0]
+    noDarkMagicValRight = noDarkMagicRight[0]
+    
+    noDarkMagicVal = max(noDarkMagicValLeft, noDarkMagicValRight)
+    darkMagicUsed = noDarkMagicLeft[1] and noDarkMagicRight[1]
+    
+    if (currDepth == 0):
+      wentLeft = noDarkMagicValLeft &gt; noDarkMagicValRight
+      return noDarkMagicVal, darkMagicUsed, wentLeft
+    else:
+      return noDarkMagicVal, darkMagicUsed
+
+  else:
+    noDarkMagicLeft = minimax(currDepth+1, node*2, True, leafNodes, treeDepth, darkMagicCost)
+    noDarkMagicRight = minimax(currDepth+1, node*2+1, True, leafNodes, treeDepth, darkMagicCost)
+    
+    noDarkMagicValLeft = noDarkMagicLeft[0]
+    noDarkMagicValRight = noDarkMagicRight[0]
+    
+    noDarkMagic = min(noDarkMagicValLeft, noDarkMagicValRight)
+    darkMagic = max(noDarkMagicValLeft, noDarkMagicValRight) - darkMagicCost
+    
+    if (darkMagic &lt;= noDarkMagic):
+      darkMagicUsed = noDarkMagicLeft[1] and noDarkMagicRight[1]
+      return noDarkMagic, darkMagicUsed
+    
+    else:
+      darkMagicUsed = True
+      return darkMagic, darkMagicUsed
+
+def pacman_game(c):
+  leafNodes = [3, 6, 2, 3, 7, 1, 2, 0]
+  treeDepth = int(math.log(len(leafNodes), 2))
+  darkMagicCost = c
+  isPacmanTurn = True
+
+  result = minimax(0, 0, isPacmanTurn, leafNodes, treeDepth, darkMagicCost)
+  
+  if (result[2]):
+    sideWent = "left"
+  else:
+    sideWent = "right"
+    
+  if (result[1]):
+    doesOrDoesNot = "uses"
+  else:
+    doesOrDoesNot = "does not use"
+    
+  print(f"The new minimax value is {result[0]}. Pacman goes {sideWent} and {doesOrDoesNot} dark magic.")
+
+darkMagicCost = int(input("Enter dark magic's cost: "))
+pacman_game(darkMagicCost)
+</font></pre>
+</body>
+</html>

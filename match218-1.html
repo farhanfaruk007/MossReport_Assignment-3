@@ -1,0 +1,125 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/2/21241025_lab03_-_MIFTAHUL_JANNAH.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/10/21201087_CSE422_Section_10_Lab_Assignment_3_-_YEASIN_FIYAZ.py<p></p><pre>
+#Task 1
+
+import random
+
+class MortalKombatGame:
+    def __init__(self, first_player):
+        self.first_player = first_player  
+        self.round_winners = []
+
+    def alpha_beta(self, depth, is_maximizing, alpha, beta):
+        if depth == 5:  
+            return random.choice([-1, 1])
+
+        if is_maximizing:
+            max_eval = float('-inf')
+            for _ in range(2):  
+                eval = self.alpha_beta(depth + 1, False, alpha, beta)
+                max_eval = max(max_eval, eval)
+                alpha = max(alpha, eval)
+                if beta &lt;= alpha:
+                    break
+            return max_eval
+        else:
+            min_eval = float('inf')
+            for _ in range(2):
+                eval = self.alpha_beta(depth + 1, True, alpha, beta)
+                min_eval = min(min_eval, eval)
+                beta = min(beta, eval)
+                if beta &lt;= alpha:
+                    break
+            return min_eval
+
+    def play_round(self, starting_player):
+        return self.alpha_beta(0, starting_player == 1, float('-inf'), float('inf'))
+
+    def play_game(self):
+        current_starting_player = self.first_player
+        while len(self.round_winners) &lt; 3 or self.round_winners.count(-1) &lt; 2 and self.round_winners.count(1) &lt; 2:
+            round_result = self.play_round(current_starting_player)
+            self.round_winners.append(round_result)
+            current_starting_player = 1 - current_starting_player
+
+        scorpion_wins = self.round_winners.count(-1)
+        subzero_wins = self.round_winners.count(1)
+        game_winner = "Scorpion" if scorpion_wins &gt; subzero_wins else "Sub-Zero"
+
+        return game_winner, self.round_winners
+
+starting_player = int(input("Enter the starting player: "))
+game = MortalKombatGame(starting_player)
+game_winner, round_results = game.play_game()
+
+print(f"Game Winner: {game_winner}")
+print(f"Total Rounds Played: {len(round_results)}")
+for i, result in enumerate(round_results, 1):
+    winner = "Scorpion" if result == -1 else "Sub-Zero"
+    print(f"Winner of Round {i}: {winner}")
+
+
+
+#Task 2
+
+
+def pacman_game(c):
+    leaf_nodes = [3, 6, 2, 3, 7, 1, 2, 0]
+
+<a name="0"></a><font color="#FF0000"><a href="match218-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_23.gif"/></a>
+
+    def minimax(depth, is_maximizing, alpha, beta, start, end):
+        if depth == 3: 
+            return leaf_nodes[start]
+
+        if is_maximizing:   #Pacman er turn
+            max_eval = float('-inf')
+            for i in range(start, end, (end - start) // 2):
+                eval = minimax(depth + 1, False, alpha, beta, i, i + (end - start) // 2)
+                max_eval = max(max_eval, eval)
+                alpha = max(alpha, eval)
+                if beta &lt;= alpha:
+                    break  # Pruning
+            return max_eval
+        else:  #Ghost er turn
+            min_eval = float('inf')
+            for i in range(start, end, (end - start) // 2):
+                eval = minimax(depth + 1, True, alpha, beta, i, i + (end - start) // 2)
+                min_eval = min(min_eval, eval)
+                beta = min(beta, eval)
+                if beta &lt;= alpha:
+                    break  # Pruning
+            return min_eval
+    minimax_value = minimax(0, True, float('-inf'), float('inf'), 0, len(leaf_nodes))
+</font>
+    left_subtree_max = max(leaf_nodes[:4])
+    right_subtree_max = max(leaf_nodes[4:])
+
+    left_with_magic = left_subtree_max - c
+    right_with_magic = right_subtree_max - c
+
+    if max(left_with_magic, right_with_magic) &gt; minimax_value:
+        if left_with_magic &gt; right_with_magic:
+            magic_strategy = "Pacman goes left and uses dark magic"
+            new_value = left_with_magic
+        else:
+            magic_strategy = "Pacman goes right and uses dark magic"
+            new_value = right_with_magic
+        return new_value, magic_strategy
+    else:
+        return minimax_value, "Pacman does not use dark magic"
+
+cost_of_dark_magic = int(input("Enter cost of dark magic in integer: "))
+result = pacman_game(cost_of_dark_magic)
+print(f"\nCost of dark magic: {cost_of_dark_magic}")
+if "does not use" in result[1]:
+    print(f"The minimax value is {result[0]}. {result[1]}")
+else:
+    print(f"The new minimax value is {result[0]}. {result[1]}")</pre>
+</body>
+</html>

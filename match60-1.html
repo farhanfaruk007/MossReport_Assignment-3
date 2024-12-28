@@ -1,0 +1,171 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/4/22101229_Aparup_Chowdhury_CSE422_04_Assignment03_Fall2024_-_APARUP_CHOWDHURY.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/5/20101557_Lab3_Sec5_-_MOHAMMOD_TAREQ_AZIZ.py<p></p><pre>
+import math
+import random
+
+
+# ========= Part-1 ======================
+
+def simulateGame(starPlayer=None):
+    if starPlayer is None:
+        starPlayer = int(input("Enter starting player no.: "))
+        depth = 5
+    
+    currPlayer = starPlayer == 1
+    round_winners = []
+    player_round_wins = [0, 0]
+
+    for _ in range(3):
+        leafNodes = []
+        for _ in range(2 ** depth):
+            leafNodes.append(random.choice([-1, 1]))
+
+        round_result = ABPalgo(
+            depth = 0, 
+            nodeIdx = 0, 
+            maximizer = currPlayer, 
+            leafNodes = leafNodes, 
+            alpha = float('-inf'), 
+            beta = float('inf')
+        )
+
+        if round_result == 1:
+            round_winners.append("Sub-Zero")
+            player_round_wins[1] += 1
+        else:
+<a name="2"></a><font color="#0000FF"><a href="match60-0.html#2" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_7.gif"/></a>
+
+            round_winners.append("Scorpion")
+            player_round_wins[0] += 1
+
+        currPlayer = not currPlayer
+
+    if player_round_wins[0] &gt; player_round_wins[1]:
+        print("Game winner: Sorpion")
+    else:
+        print("Game winner: Subzero")
+    print(f"Total rounds played: {player_round_wins[0]+player_round_wins[1]}")
+    for i in range(3):
+        print(f"Winner of Round {i}: {round_winners[i]}")
+</font>
+
+def ABPalgo(depth, nodeIdx, maximizer, leafNodes, alpha, beta):
+    if depth == 5:
+        return leafNodes[nodeIdx]
+
+    if maximizer:
+        maxVal = -math.inf
+        for iteration in range(2):
+            maxx = ABPalgo(
+                depth + 1, 
+                nodeIdx * 2 + iteration, 
+                False, 
+                leafNodes, 
+                alpha, 
+                beta
+            )
+            maxVal = max(maxVal, maxx)
+            alpha = max(alpha, maxx)
+
+            if beta &lt;= alpha:
+                break
+        return maxVal
+    else:
+        minVal = float('inf')
+        for iteration in range(2):
+            minn = ABPalgo(
+                depth + 1, 
+                nodeIdx * 2 + iteration, 
+                True, 
+                leafNodes, 
+                alpha, 
+                beta
+            )
+            minVal = min(minVal, minn)
+            beta = min(beta, minn)
+
+            if beta &lt;= alpha:
+                break
+        return minVal
+
+
+simulateGame()
+
+
+# ========= Part-2 ======================
+'''
+<a name="0"></a><font color="#FF0000"><a href="match60-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_34.gif"/></a>
+
+class NodeClass:
+    def __init__(self,nodeVal,childNode=[]):
+        self.value = nodeVal
+        self.child = childNode
+def pacman(c):
+    givenVal=[3, 6, 2, 3, 7, 1, 2, 0]
+
+    leafNodes=[]
+    for val in givenVal:
+        leafNodes.append(NodeClass(val))
+    level2=[]
+    for i in range(0, len(leafNodes), 2):
+        leftChild = leafNodes[i]
+        rightChild = leafNodes[i + 1]
+        level2.append(NodeClass(None, [leftChild, rightChild]))
+    level1 = []
+    for i in range(0, len(level2), 2):
+        leftChild = level2[i]
+        rightChild = level2[i + 1]
+        level1.append(NodeClass(None, [leftChild, rightChild]))
+    treeRoot= NodeClass(None,level1)
+
+    valWOmagic=ABPalgo(treeRoot,3,-math.inf,math.inf,True)
+
+    leftMax = max(givenVal[:4])-c
+    rightMax = max(givenVal[4:])-c
+
+    if (leftMax &gt; valWOmagic and 
+        leftMax - valWOmagic &gt;= rightMax - valWOmagic):
+        print(f"The new minimax value is {leftMax}. Pacman goes left and uses dark magic.")
+        
+    elif (rightMax &gt; valWOmagic and 
+          leftMax - valWOmagic &lt;= rightMax - valWOmagic):
+        print(f"The new minimax value is {rightMax }. Pacman goes right and uses dark magic.")
+        
+    else:
+        print(f"The minimax value is {valWOmagic}. Pacman does not use dark magic.")
+</font>
+
+<a name="1"></a><font color="#00FF00"><a href="match60-0.html#1" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_16.gif"/></a>
+
+def ABPalgo(node,treeDepth,alpha,beta,maxPlayerFlag):
+    if treeDepth==0:
+        return node.value
+    if maxPlayerFlag:
+        maxVal = -math.inf
+        for i in node.child:
+            maxx = ABPalgo(i, treeDepth - 1, alpha, beta, False)
+            maxVal = max(maxVal, maxx)
+            alpha = max(alpha, maxx)
+            if beta &lt;= alpha:
+                break
+        return maxVal
+    else:
+        minVal = math.inf
+        for j in node.child:
+            minn = ABPalgo(j, treeDepth - 1, alpha, beta, True)
+            minVal = min(minVal, minn)
+            beta = min(beta, minn)
+</font>            if beta &lt;= alpha:
+                break
+        return minVal
+        
+
+pacman(int(input("Enter c : ")))
+'''</pre>
+</body>
+</html>

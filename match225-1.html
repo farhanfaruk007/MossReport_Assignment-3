@@ -1,0 +1,123 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/15/22101783_Niaz_Morshed_CSE422_15_Lab_Assignment03_Fall2024_-_Niaz_Morshed.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/18/22101777_Raian_Islam_S18_-_RAIAN_ISLAM.py<p></p><pre>
+#part a
+def minimax_with_pruning(node_index, tree_depth, is_maximizer, game_states, alpha, beta):
+    
+    if tree_depth == 5:
+        return game_states[node_index]
+    
+    if not is_maximizer:
+        min_value = float('inf')
+        for child in range(2):
+            value = minimax_with_pruning(node_index * 2 + child, tree_depth + 1, True, game_states, alpha, beta)
+            min_value = min(value, min_value)
+            beta = min(beta, min_value)
+            if alpha &gt;= beta:
+                break
+        return min_value
+    
+    max_value = float('-inf')
+    for child in range(2):
+        value = minimax_with_pruning(node_index * 2 + child, tree_depth + 1, False, game_states, alpha, beta)
+        max_value = max(value, max_value)
+        alpha = max(alpha, max_value)
+        if alpha &gt;= beta:
+            break 
+    return max_value
+
+def battle_simulator(starting_character, battle_count):
+    outcomes = []
+    initial_alpha = float('-inf')
+    initial_beta = float('inf')
+
+<a name="1"></a><font color="#00FF00"><a href="match225-0.html#1" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_11.gif"/></a>
+
+    battle_states = [-1, 1, -1, 1, 1, -1, -1, 1, -1, 1, -1, 1, 1, -1, -1, 1, 
+                     -1, 1, -1, 1, 1, -1, -1, 1, -1, 1, -1, 1, 1, -1, -1, 1]
+    
+    for round_num in range(1, battle_count + 1):
+</font>
+        current_maximizer = (round_num % 2 == 0) != (starting_character == 0)
+        
+ 
+        result = minimax_with_pruning(0, 0, current_maximizer, battle_states, initial_alpha, initial_beta)
+        
+
+        winner = "Sub-Zero" if result == 1 else "Scorpion"
+        outcomes.append((round_num, winner))
+    
+
+    sub_zero_wins = sum(1 for _, winner in outcomes if winner == "Sub-Zero")
+    scorpion_wins = battle_count - sub_zero_wins
+    
+
+    final_victor = "Sub-Zero" if sub_zero_wins &gt; scorpion_wins else "Scorpion" if scorpion_wins &gt; sub_zero_wins else "Draw"
+    
+
+    print(f"Game Winner: {final_victor}")
+    print(f"Total Rounds Played: {battle_count}")
+    for round_num, winner in outcomes:
+        print(f"Winner of Round {round_num}: {winner}")
+
+def strategic_evaluation(pos, depth, is_maximizer, states, alpha, beta):
+    if depth == 3:
+        return states[pos]
+    
+    if not is_maximizer:
+        min_eval = float('inf')
+        for move in range(2):
+            eval_value = strategic_evaluation(pos * 2 + move, depth + 1, True, states, alpha, beta)
+            min_eval = min(eval_value, min_eval)
+            beta = min(beta, min_eval)
+            if alpha &gt;= beta:
+                break
+        return min_eval
+    
+    max_eval = float('-inf')
+    for move in range(2):
+        eval_value = strategic_evaluation(pos * 2 + move, depth + 1, False, states, alpha, beta)
+        max_eval = max(eval_value, max_eval)
+        alpha = max(alpha, max_eval)
+        if alpha &gt;= beta:
+            break
+    return max_eval
+
+def strategy_game(power_cost):
+    alpha = float('-inf')
+    beta = float('inf')
+<a name="0"></a><font color="#FF0000"><a href="match225-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_11.gif"/></a>
+
+    position_values = [3, 6, 2, 3, 7, 1, 2, 0]
+    
+
+    standard_value = strategic_evaluation(0, 0, True, position_values, alpha, beta)
+    
+
+    right_path = position_values[len(position_values)//2:]
+    left_path = position_values[:len(position_values)//2]
+    right_power = max(right_path) - power_cost
+    left_power = max(left_path) - power_cost
+    optimal_power = max(right_power, left_power)
+    
+    if optimal_power &gt; standard_value:
+</font>        direction = "right" if right_power &gt; left_power else "left"
+        print(f"The new minimax value is {optimal_power}.Pacman goes {direction} and uses dark magic")
+    else:
+        print(f"The minimax value is {standard_value}.Pacman does not use dark magic")
+
+if __name__ == "__main__":
+    character = int(input("please enter 0 for Scorpion or 1 for Sub-Zero "))
+    rounds = int(input("please enter numbers of round to be played "))
+    battle_simulator(character, rounds)
+    
+    print("\n--- Special Power Analysis ---")
+    power_cost = int(input("Please give the value of c "))
+    strategy_game(power_cost)
+</pre>
+</body>
+</html>

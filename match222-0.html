@@ -1,0 +1,106 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/9/22101047_LAB03_SEC9_SaadmanBinJashim_-_SAADMAN_BIN_JASHIM.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/9/22101047_LAB03_SEC9_SaadmanBinJashim_-_SAADMAN_BIN_JASHIM.py<p></p><pre>
+#pruning function
+<a name="0"></a><font color="#FF0000"><a href="match222-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_31.gif"/></a>
+
+import random
+
+def alpha_beta(depth, position, max_player, alpha, beta, leaf, branch,max_depth):
+    
+    if depth == max_depth: 
+        return leaf[position]
+
+    if max_player:
+        max_eval = float('-inf')
+        for i in range(branch):  
+            eval = alpha_beta(depth + 1, position * branch + i, False, alpha, beta, leaf,branch,max_depth)
+            max_eval = max(max_eval, eval)
+            alpha = max(alpha, eval)
+            if beta &lt;= alpha:
+                break
+        return max_eval
+    else:
+        min_eval = float('inf')
+        for i in range(branch):
+            eval = alpha_beta(depth + 1, position * branch + i, True, alpha, beta, leaf,branch,max_depth)
+            min_eval = min(min_eval, eval)
+            beta = min(beta, eval)
+            if beta &lt;= alpha:
+                break
+        return min_eval
+</font>#task1
+
+def generate_leaves(branch,max_depth):
+    num_leaves = branch ** max_depth
+    return [random.choice([-1, 1]) for _ in range(num_leaves)]        
+
+def play_mk(readyplayer1):
+    rounds_played = 0
+    round_winners = []
+    current_player = readyplayer1
+    while rounds_played &lt; 3: 
+        rounds_played += 1
+        values = generate_leaves(2,5)
+        finish_him = alpha_beta(0, 0, current_player == 1, float('-inf'), float('inf'), values,2,5)
+        if finish_him == -1:
+            round_winners.append('Scorpion')
+        else:
+            round_winners.append('Sub-Zero')
+        current_player = 1 - current_player 
+        if len(round_winners) &gt;= 2:
+         if round_winners[0] == round_winners[1]:
+            break
+        
+        
+
+    fatality = max(set(round_winners), key=round_winners.count)
+   
+
+    print(f"Game Winner: {fatality}")
+    print(f"Total Rounds Played: {rounds_played}")
+    for i, winner in enumerate(round_winners, 1):
+        print(f"Winner of Round {i}: {winner}")
+
+
+play_mk(int(input("Choose your character:")))
+
+print("--------------------")
+
+#task2
+
+def pacman_game(c):
+    
+    leaf_values = [3, 6, 2, 3, 7, 1, 2, 0]
+    
+    game_tree = [
+        [3, 6], [2, 3], [7, 1], [2, 0]
+    ]
+  
+    
+    no_magic = alpha_beta(0, 0,True, float('-inf'), float('inf'),leaf_values,2 ,3)
+
+    left_max = max(game_tree[0] + game_tree[1])
+    right_max = max(game_tree[2] + game_tree[3])
+    
+    left_with_magic = left_max - c
+    right_with_magic = right_max - c
+
+    with_magic = max(left_with_magic, right_with_magic)
+
+    if with_magic &gt; no_magic:
+        if left_with_magic &gt; right_with_magic:
+            print(f"The new minimax value is {left_with_magic}. Pacman goes left and uses dark magic")
+        else:
+            print(f"The new minimax value is {right_with_magic}. Pacman goes right and uses dark magic")
+    else:
+        print(f"The minimax value is {no_magic}. Pacman does not use dark magic")
+
+pacman_game(int(input("Dark magic cost: ")))
+</pre>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/7/22101135_fahim_cse422_07_ass_03_-_ARFAN_AHMED_FAHIM.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/15/22301371_AshikaHabibKhan_CSE422_15_Lab_Assignment03_Fall2024_-_ASHIKA_HABIB_KHAN.py<p></p><pre>
+                 ######## Pt 1
+
+import random
+def a_b(val, d, alp, bta, curr, idx, branch_fact=2):
+    if d == 5:
+        return val[idx]
+
+    if curr == 0:
+        temp = float('-inf')
+        for i in range(branch_fact):
+            temp = max(temp, a_b(val, d + 1, alp, bta, 1, idx * branch_fact + i, branch_fact)) 
+            alp = max(alp, temp)
+            if alp &gt;= bta:
+                break
+        return temp
+    else: 
+        temp = float('inf')
+        for i in range(branch_fact):
+            temp = min(temp, a_b(val, d + 1, alp, bta, 0, idx * branch_fact + i, branch_fact)) 
+            bta = min(bta, temp)
+            if bta &lt;= alp:
+                break
+        return temp
+
+def mor_komb():
+    start = int(input("Who starts the game: "))
+    val = [random.choice([-1, 1]) for k in range(32)]
+    result = []
+    curr = start
+
+    for round_no in range(1, 4):
+        win_val = a_b(val, 0, -float('inf'), float('inf'), curr, 0)
+        if win_val == -1:
+            win_name = "Scorpion"
+        else:
+            win_name = "Sub-Zero"
+        result.append((round_no, win_name))
+        curr = 1 - curr
+    last_r = result[-1]
+    ult_winner = last_r[1]
+    print(f"Game Winner: {ult_winner}")
+    print("Total Rounds Played: 3")
+    for round_no, win_name in result:
+        print(f"Winner of Round {round_no}: {win_name}")
+
+mor_komb()
+
+######     Pt 2
+def pac_man(c0st):
+    p0int = [3, 6, 2, 3, 7, 1, 2, 0]
+    zero_mejik = a_b(0, 0, 0, -float('inf'), float('inf'), p0int)
+
+    if zero_mejik is None:
+        return
+
+    l_p0int = max(p0int[:4]) - c0st
+    r_p0int = max(p0int[4:]) - c0st
+
+    if max(l_p0int, r_p0int) &gt; zero_mejik:
+        if r_p0int &gt; l_p0int:
+            print(f"The new minimax value is {r_p0int}. Pacman goes right and uses dark magic.")
+        else:
+            print(f"The new minimax value is {l_p0int}. Pacman goes left and uses dark magic.")
+    else:
+        print(f"The minimax value is {zero_mejik}. Pacman does not use dark magic.")
+
+<a name="0"></a><font color="#FF0000"><a href="match244-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_26.gif"/></a>
+
+def a_b(d, idx, curr, alp, bta, leaf):
+    if d == 3:
+        return leaf[idx]
+
+    if curr == 0: 
+        temp = float('-inf')
+        for i in range(2):
+            temp = max(temp, a_b(d + 1, idx * 2 + i, 1, alp, bta, leaf))
+            alp = max(alp, temp)
+            if bta &lt;= alp: 
+                break
+        return temp
+    elif curr == 1: 
+        temp = float('inf')
+        for i in range(2):
+            temp = min(temp, a_b(d + 1, idx * 2 + i, 0, alp, bta, leaf))
+            bta = min(bta, temp)
+            if bta &lt;= alp: 
+                break
+        return temp 
+</font>
+pac_man(int(input(" ")))
+</pre>
+</body>
+</html>

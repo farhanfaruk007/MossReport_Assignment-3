@@ -1,0 +1,190 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/11/22101650_md_ashiqur_rahman_abir_cse422_11_lab_assignment3_fall2024_-_MD._ASHIQUR_RAHMAN_ABIR.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/12/22101480_Muhammad_Ridwan_CSE422_Assignment03_-_Muhammad_Ridwan.py<p></p><pre>
+#part1
+
+import random
+
+input_file = open("input1.txt", "r")
+output_file = open("output1.txt", "w")
+starting_player = int(input_file.read().strip())
+
+class game_tree: 
+<a name="0"></a><font color="#FF0000"><a href="match137-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_25.gif"/></a>
+
+    def __init__(self, value=None, child_nodes=None, branching_factor=2, max_depth=5):
+        self.value = value
+        self.child_nodes = child_nodes if child_nodes is not None else []
+        self.branching_factor = branching_factor
+        self.max_depth = max_depth
+
+    def create_tree(self, depth):
+        if depth == 0:
+            return game_tree (random.choice([-1, 1])) #depth0 meaning leaf node, giving random -1 ,1
+        else:
+            node = game_tree()
+            node.child_nodes = [self.create_tree(depth - 1) for _ in range(self.branching_factor)] # up  
+            return node
+
+    def alpha_beta(self, node, depth, alpha, beta, maximizing_player):
+        if node.value is not None or depth == 0:
+            return node.value #giving the leaf value of each node..
+
+        if maximizing_player:
+            value = -float('inf')
+            for child in node.child_nodes:
+                value = max(value, self.alpha_beta(child, depth - 1, alpha, beta, False)) #comparing with upper level value with minus inf by calling again the alpha_beta for upper depth
+                alpha = max(alpha, value) #updating max value with - inf
+                if alpha &gt;=beta :
+                    break
+            return alpha
+        else:
+            value = float('inf')
+            for child in node.child_nodes:
+                value = min(value, self.alpha_beta(child, depth - 1, alpha, beta, True))
+                beta = min(beta, value)
+                if alpha &gt;=beta:
+</font>                    break
+            return beta
+
+    def simulate_game(self, starting_player):
+        tree_root = self.create_tree(self.max_depth)
+        best_move = None
+        alpha = -float('inf')
+        beta = float('inf')
+        rounds_played = 0
+        winner_of_each_round = []
+
+        while rounds_played &lt; 5:
+            if starting_player == 0:
+                for child in tree_root.child_nodes:
+                    value = self.alpha_beta(child, self.max_depth, alpha, beta, True)
+                    if value &gt; alpha:
+                        alpha = value
+                        best_move = child
+                if alpha == 1:
+                    winner_of_each_round.append("Scorpion")
+                    rounds_played += 1
+                    break
+                else:
+                    winner_of_each_round.append("Sub-Zero")
+                    rounds_played += 1
+                    if beta == -1:
+                        break
+                starting_player = 1
+            else:
+                for child in tree_root.child_nodes:
+                    value = self.alpha_beta(child, self.max_depth, alpha, beta, False)
+                    if value &lt; beta:
+                        beta = value
+                        best_move = child
+                if beta == -1:
+                    winner_of_each_round.append("Sub-Zero")
+                    rounds_played += 1
+                    break
+                else:
+                    winner_of_each_round.append("Scorpion")
+                    rounds_played += 1
+                starting_player = 0
+
+        return winner_of_each_round, rounds_played
+    
+
+game = game_tree()
+winner_of_each_round, total_rounds = game.simulate_game(starting_player)
+
+output_file = open("output1.txt", "w")
+if winner_of_each_round[-1] == "Scorpion":
+    output_file.write("Game Winner: Scorpion\n")
+else:
+    output_file.write("Game Winner: Sub-Zero\n")
+
+output_file.write(f"Total Rounds Played: {total_rounds}\n")
+for i in range(total_rounds):
+    output_file.write(f"Winner of Round {i + 1}: {winner_of_each_round[i]}\n")
+
+input_file.close()
+output_file.close()
+
+
+#part2
+
+input_file = open("input2.txt", "r")
+output_file = open("output2.txt", "w")
+c = int(input_file.read().strip())
+
+class game_node:
+    def __init__(self, value, child_nodes=None):
+        self.value = value
+        self.child_nodes = child_nodes if child_nodes is not None else []
+
+def pacman_game(c):
+    root_node = game_node(0)
+    root_node.child_nodes = [
+        game_node(0, [
+            game_node(3),
+            game_node(6),
+            game_node(2)
+        ]),
+        game_node(0, [
+            game_node(3),
+            game_node(7),
+            game_node(1),
+            game_node(2),
+            game_node(0)
+        ])
+    ]
+
+    def alpha_beta(node, depth, alpha, beta, is_max_player):
+        if depth == 0 or node.child_nodes is None or len(node.child_nodes) == 0:
+            return node.value
+        if is_max_player:
+            best_value = -float('inf')
+            for child in node.child_nodes:
+                best_value = max(best_value, alpha_beta(child, depth-1, alpha, beta, False))
+                alpha = max(alpha, best_value)
+                if alpha &gt;=beta:
+                    break
+            return best_value
+        else:
+            best_value = float('inf')
+            for child in node.child_nodes:
+                best_value = min(best_value, alpha_beta(child, depth-1, alpha, beta, True))
+                beta = min(beta, best_value)
+                if alpha &gt;=beta:
+                    break
+            return best_value
+
+    root_value = alpha_beta(root_node, 2, -float('inf'), float('inf'), True)
+
+    def use_dark_magic(node, c):
+        if node.child_nodes is None or len(node.child_nodes) == 0:
+            return node.value - c
+        else:
+            return max(use_dark_magic(child, c) for child in node.child_nodes)
+
+    left_magic_value = use_dark_magic(root_node.child_nodes[0], c)
+    right_magic_value = use_dark_magic(root_node.child_nodes[1], c)
+
+    result = ""
+    if left_magic_value &gt; root_value or right_magic_value &gt; root_value:
+        if left_magic_value &gt;= right_magic_value:
+            result = f"The new minimax value is {left_magic_value}. Pac-Man goes left and uses dark magic."
+        else:
+            result = f"The new minimax value is {right_magic_value}. Pac-Man goes right and uses dark magic."
+    else:
+        result = f"The minimax value is {root_value}. Pac-Man does not use dark magic."
+
+    return result
+
+result = pacman_game(c)
+output_file.write(result + "\n")
+
+input_file.close()
+output_file.close()</pre>
+</body>
+</html>

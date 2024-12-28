@@ -1,0 +1,129 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/18/21201705_mazharul_islam_cse422_18_assignment03_fall2024_-_MAZHARUL_ISLAM.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/18/21201705_mazharul_islam_cse422_18_assignment03_fall2024_-_MAZHARUL_ISLAM.py<p></p><pre>
+
+
+#part_1
+
+
+import random
+def minimax(depth, is_maximizing, alpha, beta):
+
+
+    if depth == 0:
+
+        return random.choice([-1, 1])
+
+    if is_maximizing:
+        max_eval = float('-inf')
+        for p in range(2):
+            eval = minimax(depth - 1, False, alpha, beta)
+            max_eval = max(max_eval, eval)
+            alpha = max(alpha, eval)
+            if beta &lt;= alpha:
+                break
+        return max_eval
+    else:
+        min_eval = float('inf')
+        for q in range(2):
+            eval = minimax(depth - 1, True, alpha, beta)
+            min_eval = min(min_eval, eval)
+            beta = min(beta, eval)
+            if beta &lt;= alpha:
+                break
+        return min_eval
+
+
+def game(first_player):
+
+    depth = 5
+    rounds = []
+    p1=0
+    p2=0
+    is_maximizing = (first_player == 0)
+    for k in range(1, depth -1):
+        result = minimax(depth, is_maximizing, float('-inf'), float('inf'))
+        if result == 1:
+            rounds.append(f"Winner of Round {k}: Scorpion")
+            p1+=1
+        else:
+            rounds.append(f"Winner of Round {k}: Sub-Zero")
+            p2+=1
+        is_maximizing = not is_maximizing
+
+    if p1&gt;p2:
+        winner = "Scorpion"
+    else:
+        winner = "Sub-Zero"
+
+    print(f"Game Winner: {winner}")
+    print(f"Total Rounds Played: {len(rounds)}")
+    print(*rounds,sep="\n")
+
+
+
+
+first_player = 0
+
+game(first_player)
+
+
+####part_2
+
+def minimax(depth, is_maximizing, scores, alpha, beta):
+
+<a name="0"></a><font color="#FF0000"><a href="match178-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_20.gif"/></a>
+
+    if isinstance(scores, int):
+        return scores
+
+    if is_maximizing:
+        best = float('-inf')
+        for child in scores:
+            score = minimax(depth + 1, False, child, alpha, beta)
+            best = max(best, score)
+            alpha = max(alpha, best)
+            if beta &lt;= alpha:
+                break
+        return best
+    else:
+        best = float('inf')
+        for child in scores:
+            score = minimax(depth + 1, True, child, alpha, beta)
+            best = min(best, score)
+            beta = min(beta, best)
+            if beta &lt;= alpha:
+</font>                break
+        return best
+
+<a name="1"></a><font color="#00FF00"><a href="match178-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_18.gif"/></a>
+
+def pacman_game(c):
+
+    scores = [
+        [6, 2],
+        [7, 1]
+    ]
+    normal_result = minimax(0, True, scores, float('-inf'), float('inf'))
+
+    left_magic = max(scores[0])
+    right_magic = max(scores[1])
+    magic_result = max(left_magic, right_magic) - c
+
+
+    if magic_result &gt; normal_result:
+        return f"The new minimax value is {magic_result}. Pacman uses dark magic."
+    else:
+        return f"The minimax value is {normal_result}. Pacman does not use dark magic."
+
+
+if __name__ == "__main__":
+    c = int(input(" "))
+    result = pacman_game(c)
+    print(result)</font></pre>
+</body>
+</html>

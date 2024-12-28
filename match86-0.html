@@ -1,0 +1,177 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/17/22101862_TrisheetaJahanAzad_CSE422_17_Assignment03_Fall2024_-_TRISHEETA_JAHAN_AZAD.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/17/22101862_TrisheetaJahanAzad_CSE422_17_Assignment03_Fall2024_-_TRISHEETA_JAHAN_AZAD.py<p></p><pre>
+#Task 1
+def alpha_beta_pruning(depth, alpha, beta, is_maximizing_player, rounds_played):
+    if depth == 0:
+        return -1 if is_maximizing_player else 1
+
+    if is_maximizing_player:
+        max_eval = -float('inf')
+        for i in range(2):
+            eval = alpha_beta_pruning(depth - 1, alpha, beta, False, rounds_played)
+            max_eval = max(max_eval, eval)
+            alpha = max(alpha, eval)
+            if beta &lt;= alpha:
+                break
+        return max_eval
+    else:
+        min_eval = float('inf')
+        for _ in range(2):
+            eval = alpha_beta_pruning(depth - 1, alpha, beta, True, rounds_played)
+            min_eval = min(min_eval, eval)
+            beta = min(beta, eval)
+            if beta &lt;= alpha:
+                break
+        return min_eval
+
+def simulate_battle(starting_player):
+    rounds_played = 0
+    scorpion_wins = 0
+    sub_zero_wins = 0
+
+    current_player = starting_player
+    round_results = []
+
+    for round_num in range(1, 6):
+        rounds_played += 1
+
+        is_maximizing_player = (current_player == 1)
+
+        winner = alpha_beta_pruning(5, -float('inf'), float('inf'), is_maximizing_player, rounds_played)
+
+        if winner == -1:
+            round_results.append(f"Winner of Round {round_num}: Scorpion")
+            scorpion_wins += 1
+        else:
+            round_results.append(f"Winner of Round {round_num}: Sub-Zero")
+            sub_zero_wins += 1
+
+        if scorpion_wins == 3 or sub_zero_wins == 3:
+            break
+
+        current_player = 1 - current_player
+
+    if scorpion_wins &gt; sub_zero_wins:
+        game_winner = "Scorpion"
+    else:
+        game_winner = "Sub-Zero"
+
+    return game_winner, rounds_played, round_results
+
+starting_player = int(input("Enter starting player (0 for Scorpion, 1 for Sub-Zero): "))
+
+game_winner, rounds_played, round_results = simulate_battle(starting_player)
+
+print(f"Game Winner: {game_winner}")
+print(f"Total Rounds Played: {rounds_played}")
+for result in round_results:
+    print(result)
+
+
+
+
+
+#Task 2
+<a name="3"></a><font color="#00FFFF"><a href="match86-1.html#3" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_3_4.gif"/></a>
+
+def game_tree_search(state, level, max_player, score_array, pos=0):
+    if level == 0:
+        return score_array[pos]
+    
+    if max_player:
+        highest_score = float('-inf')
+        path_a = game_tree_search(state, level - 1, False, score_array, pos * 2)
+</font>        highest_score = max(highest_score, path_a)
+<a name="8"></a><font color="#00FFFF"><a href="match86-1.html#8" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_3_3.gif"/></a>
+
+        path_b = game_tree_search(state, level - 1, False, score_array, pos * 2 + 1)
+        highest_score = max(highest_score, path_b)
+        return highest_score
+    else:
+        lowest_score = float('inf')
+        path_a = game_tree_search(state, level - 1, True, score_array, pos * 2)
+</font>        lowest_score = min(lowest_score, path_a)
+        path_b = game_tree_search(state, level - 1, True, score_array, pos * 2 + 1)
+        lowest_score = min(lowest_score, path_b)
+        return lowest_score
+
+<a name="4"></a><font color="#FF00FF"><a href="match86-1.html#4" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_4_4.gif"/></a>
+
+def optimized_tree_search(state, level, min_bound, max_bound, max_player, score_array, pos=0):
+    if level == 0:
+        return score_array[pos]
+    
+    if max_player:
+        highest_score = float('-inf')
+        path_a = optimized_tree_search(state, level - 1, min_bound, max_bound, False, score_array, pos * 2)
+</font><a name="5"></a><font color="#FF0000"><a href="match86-1.html#5" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_4.gif"/></a>
+
+        highest_score = max(highest_score, path_a)
+        min_bound = max(min_bound, highest_score)
+        if max_bound &lt;= min_bound:
+            return highest_score
+        path_b = optimized_tree_search(state, level - 1, min_bound, max_bound, False, score_array, pos * 2 + 1)
+</font><a name="7"></a><font color="#0000FF"><a href="match86-1.html#7" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_4.gif"/></a>
+
+        highest_score = max(highest_score, path_b)
+        return highest_score
+    else:
+        lowest_score = float('inf')
+        path_a = optimized_tree_search(state, level - 1, min_bound, max_bound, True, score_array, pos * 2)
+</font><a name="6"></a><font color="#00FF00"><a href="match86-1.html#6" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_4.gif"/></a>
+
+        lowest_score = min(lowest_score, path_a)
+        max_bound = min(max_bound, lowest_score)
+        if max_bound &lt;= min_bound:
+            return lowest_score
+        path_b = optimized_tree_search(state, level - 1, min_bound, max_bound, True, score_array, pos * 2 + 1)
+</font><a name="1"></a><font color="#00FF00"><a href="match86-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_4.gif"/></a>
+
+        lowest_score = min(lowest_score, path_b)
+        return lowest_score
+
+def calculate_optimal_path(magic_cost):
+    game_scores = [3, 6, 2, 3, 7, 1, 2, 0]
+</font>    
+    base_score = optimized_tree_search(None, 3, float('-inf'), float('inf'), True, game_scores)
+    
+    left_path_max = max(game_scores[0:4])
+    right_path_max = max(game_scores[4:8])
+    
+<a name="0"></a><font color="#FF0000"><a href="match86-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_9.gif"/></a>
+
+    magic_left_score = left_path_max - magic_cost
+    magic_right_score = right_path_max - magic_cost
+    
+    best_score = max(base_score, magic_left_score, magic_right_score)
+    
+    if best_score == base_score:
+        return f"The minimax value is {base_score}. Pacman does not use dark magic"
+    elif best_score == magic_right_score:
+        return f"The new minimax value is {magic_right_score}. Pacman goes right and uses dark magic"
+    else:
+        return f"The new minimax value is {magic_left_score}. Pacman goes left and uses dark magic"
+
+print("Test scenario 1 (magic_cost = 2):")
+print(calculate_optimal_path(2))
+print("\nTest scenario 2 (magic_cost = 5):")
+print(calculate_optimal_path(5))
+
+print("\nValidating with optimized search:")
+game_scores = [3, 6, 2, 3, 7, 1, 2, 0]
+root_value = optimized_tree_search(None, 3, float('-inf'), float('inf'), True, game_scores)
+</font><a name="2"></a><font color="#0000FF"><a href="match86-1.html#2" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_4.gif"/></a>
+
+print(f"Root node value without magic: {root_value}")
+
+left_best = max(game_scores[:4])
+right_best = max(game_scores[4:])
+print(f"\nLeft path with magic (cost=2): {left_best - 2}")
+print(f"Right path with magic (cost=2): {right_best - 2}")</font></pre>
+</body>
+</html>

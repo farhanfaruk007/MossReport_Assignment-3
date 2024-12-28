@@ -1,0 +1,127 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/10/21201734_CSE422_10_LabAssignment3.py_-_ABRAR_IBNE_HAQUE.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/10/21201734_CSE422_10_LabAssignment3.py_-_ABRAR_IBNE_HAQUE.py<p></p><pre>
+# TASK01
+
+import random
+
+
+def alpha_beta_pruning(current_depth, position, is_max_player, outcomes, alpha, beta):
+    if current_depth == 5:
+        return outcomes[position]
+
+    if is_max_player:
+        best_score = float('-inf')
+        for branch in range(2):
+            score = alpha_beta_pruning(current_depth + 1, position * 2 + branch, False, outcomes, alpha, beta)
+            best_score = max(best_score, score)
+            alpha = max(alpha, score)
+            if beta &lt;= alpha:
+                break
+        return best_score
+    else:
+        best_score = float('inf')
+        for branch in range(2):
+            score = alpha_beta_pruning(current_depth + 1, position * 2 + branch, True, outcomes, alpha, beta)
+<a name="2"></a><font color="#0000FF"><a href="match197-1.html#2" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_6.gif"/></a>
+
+            best_score = min(best_score, score)
+            beta = min(beta, score)
+            if beta &lt;= alpha:
+                break
+        return best_score
+
+
+def simulate_game(starting_player):
+</font><a name="0"></a><font color="#FF0000"><a href="match197-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_13.gif"/></a>
+
+    outcomes = [random.choice([-1, 1]) for _ in range(32)]
+    results = []
+    alpha = float('-inf')
+    beta = float('inf')
+
+    for round_num in range(3):
+        if starting_player == 0:
+            is_max_player = True
+        else:
+            is_max_player = False
+
+        round_result = alpha_beta_pruning(0, 0, is_max_player, outcomes, alpha, beta)
+
+        if round_result == -1:
+            results.append("Scorpion")
+        else:
+            results.append("Sub-Zero")
+</font>
+        starting_player = 1 - starting_player
+
+    scorpion_wins = results.count("Scorpion")
+    sub_zero_wins = results.count("Sub-Zero")
+    game_winner = "Scorpion" if scorpion_wins &gt; sub_zero_wins else "Sub-Zero"
+
+    print(f"Game Winner: {game_winner}")
+    print("Total Rounds Played: 3")
+<a name="1"></a><font color="#00FF00"><a href="match197-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_8.gif"/></a>
+
+    for i, winner in enumerate(results, start=1):
+        print(f"Winner of Round {i}: {winner}")
+
+
+player_start = int(input("Enter starting player number (0 for Scorpion, 1 for Sub-Zero): "))
+simulate_game(player_start)
+
+
+#TASK02
+
+import math
+
+def evaluate_minmax(depth, node_index, is_maximizing, leaf_values, max_depth, magic_cost):
+    if depth == max_depth:
+        return leaf_values[node_index], False
+
+    if is_maximizing:
+        left_value, left_magic = evaluate_minmax(depth + 1, node_index * 2, False, leaf_values, max_depth, magic_cost)
+</font>        right_value, right_magic = evaluate_minmax(depth + 1, node_index * 2 + 1, False, leaf_values, max_depth, magic_cost)
+
+        best_value = max(left_value, right_value)
+        magic_used = left_magic or right_magic
+
+        if depth == 0:  # At the root level
+            chose_left = left_value &gt; right_value
+            return best_value, magic_used, chose_left
+
+        return best_value, magic_used
+
+    else:
+        left_value, left_magic = evaluate_minmax(depth + 1, node_index * 2, True, leaf_values, max_depth, magic_cost)
+        right_value, right_magic = evaluate_minmax(depth + 1, node_index * 2 + 1, True, leaf_values, max_depth, magic_cost)
+
+        no_magic_score = min(left_value, right_value)
+        magic_score = max(left_value, right_value) - magic_cost
+
+        if magic_score &gt; no_magic_score:
+            return magic_score, True
+
+        return no_magic_score, left_magic or right_magic
+
+def pacman_strategy(magic_cost):
+    leaf_values = [3, 6, 2, 3, 7, 1, 2, 0]
+    max_depth = int(math.log2(len(leaf_values)))
+
+    final_result = evaluate_minmax(0, 0, True, leaf_values, max_depth, magic_cost)
+
+    direction = "left" if final_result[2] else "right"
+    magic_status = "uses" if final_result[1] else "does not use"
+
+    print(f"The new minimax value is {final_result[0]}. Pacman goes {direction} and {magic_status} dark magic.")
+
+
+magic_cost_input = int(input("Enter the cost of using dark magic: "))
+pacman_strategy(magic_cost_input)
+</pre>
+</body>
+</html>

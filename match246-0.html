@@ -1,0 +1,133 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/4/20301250_Nazmul_Hasan_CSE422_04_Assignment03_Summer2024_-_Nazmul_Hasan.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/4/20301250_Nazmul_Hasan_CSE422_04_Assignment03_Summer2024_-_Nazmul_Hasan.py<p></p><pre>
+
+#___________________________Task-1_______________________________
+<a name="1"></a><font color="#00FF00"><a href="match246-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_8.gif"/></a>
+
+import random
+
+def ab_prun(n, d, a, b, max_player):
+    if d == 0 or n.leaf():
+        return n.utility_values()
+
+    if max_player:
+        n_value = float('-inf')
+        for c in n.g_child():
+            n_value = max(n_value, ab_prun(c, d-1, a, b, False))
+</font>            a = max(a, n_value)
+            if b &lt;= a:
+                break
+        return n_value
+    else:
+        n_value = float('inf')
+        for c in n.g_child():
+            n_value = min(n_value, ab_prun(c, d-1, a, b, True))
+<a name="2"></a><font color="#0000FF"><a href="match246-1.html#2" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_7.gif"/></a>
+
+            b = min(b, n_value)
+            if b &lt;= a:
+                break
+        return n_value
+
+class Node:
+    def __init__(self, name):
+        self.name = name
+        self.childrenn = []
+
+    def leaf(self):
+</font>        return not self.childrenn
+
+    def utility_values(self):
+        return random.choice([-1, 1])
+
+    def g_child(self):
+        return []
+
+
+def game(inp):
+    root = Node("Root")
+    r_played = 0
+    curr_player = inp
+<a name="0"></a><font color="#FF0000"><a href="match246-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_9.gif"/></a>
+
+    r_r = []
+    count = 0
+
+    while r_played &lt; 3:
+        r = ab_prun(root, 5, float('-inf'), float('inf'), curr_player == 1)
+        if r == 1:
+            winner = "Sub-Zero"
+            count += 1
+        else:
+            winner = "Scorpion"
+
+        r_r.append(f"Winner of Round {r_played + 1}: {winner}")
+</font>        curr_player = 1 if curr_player == 0 else 0
+        r_played += 1
+
+    if(count&gt;1):
+        game_winner="Sub-Zero"
+    else:
+        game_winner="Scorpion"
+    print(f"Game Winner: {game_winner}")
+    print(f"Total Rounds Played: {r_played}")
+
+    for round_r in r_r:
+        print(round_r)
+p=int(input("Enter who starts first (0 for Scorpion, 1 for Sub-Zero): "))
+
+game(p)
+
+
+
+#_______________________Task-2___________________
+def pacman_game(c):
+
+    scores = [3, 6, 2, 3, 7, 1, 2, 0]
+    
+ 
+    def alpha_beta_prun(n, d, is_maxx):
+        if d == 0: 
+            return scores[n]
+        
+        if is_maxx:  
+            best_val = float('-inf')
+
+            for i in range(2):  
+                c = n * 2 + i
+                best_val = max(best_val, alpha_beta_prun(c, d - 1, False))
+            return best_val
+        
+        else:  
+            best_val = float('inf')
+            
+            for i in range(2):  
+                c = n * 2 + i
+                best_val = min(best_val, alpha_beta_prun(c, d - 1, True))
+            return best_val
+
+
+    root = alpha_beta_prun(0, 3, True)
+
+    left = max(scores[0:4]) - c  
+    right = max(scores[4:]) - c  
+
+    if max(left, right) &lt; root:
+        print("The new minimax value is ", root,". Pacman does not use dark magic.")
+    elif left &gt; right:
+        print("The new minimax value is ", left ,". Pacman goes left and uses dark magic.")
+    else:
+        print("The new minimax value is", right ,". Pacman goes right and uses dark magic.")
+
+
+# Input and Output
+c = int(input("Enter the cost of using dark magic (c): "))
+pacman_game(c)
+</pre>
+</body>
+</html>

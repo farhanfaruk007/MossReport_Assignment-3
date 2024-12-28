@@ -1,0 +1,145 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/6/21301401_mahmud_ferdous_cse422_06_assignment03_fall2024_py_-_MAHMUD_FERDOUS.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/11/23341111_FardinHassanTamim_CSE422_11_Lab_Assignment3_Fall2024.py<p></p><pre>
+#Part 1: Mortal Kombat
+
+<a name="0"></a><font color="#FF0000"><a href="match46-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_89.gif"/></a>
+
+def alpha_beta_pruning(node, depth, alpha, beta, find_powerful_plyer):
+
+    if depth == 5 or type(node) is not list:
+        return node
+
+
+    if find_powerful_plyer:
+
+        searching_max_evalution_value = float('-inf')
+
+        for collecting_node_of_child in node:
+
+            select_value = alpha_beta_pruning(collecting_node_of_child, depth + 1, alpha, beta, False)
+            searching_max_evalution_value = max(searching_max_evalution_value, select_value)
+            alpha = max(alpha, select_value)
+
+            if beta &lt;= alpha:
+                break
+
+        return searching_max_evalution_value
+
+    else:
+
+        searching_min_evalution_value2 = float('inf')
+
+        for collecting_node_of_child in node:
+            select_value = alpha_beta_pruning(collecting_node_of_child, depth + 1, alpha, beta, True)
+            searching_min_evalution_value2 = min(searching_min_evalution_value2, select_value)
+            beta = min(beta, select_value)
+
+            if beta &lt;= alpha:
+                break
+
+        return searching_min_evalution_value2
+
+
+def simulate_mortal_kombat(random_plyer_nme):
+
+    clculting_count = 0
+    present_plyer = random_plyer_nme
+    lst_counted_result = []
+
+    tree_building_for_gmes = [
+        [1, -1],
+        [1, -1],
+        [1, -1],
+        [1, -1],
+        [1, -1]
+    ]
+    for i in range(len(tree_building_for_gmes)):
+
+        result = alpha_beta_pruning(tree_building_for_gmes[i], 0, float('-inf'), float('inf'), present_plyer == 1)
+        clculting_count += 1
+        round_winner = "Sub-Zero" if result == 1 else "Scorpion"
+        lst_counted_result.append(f"Each round winer {i+1}: {round_winner}")
+
+
+        present_plyer = 1 if present_plyer == 0 else 0
+
+
+    game_winner = "Scorpion" if lst_counted_result.count("Scorpion") &gt; lst_counted_result.count("Sub-Zero") else "Sub-Zero"
+
+
+    print(f"fina winner: {game_winner}")
+    print(f"Playing matches: {clculting_count}")
+
+    for result in lst_counted_result:
+        print(result)
+
+
+simulate_mortal_kombat(0)
+
+#Part 2:Games with Magic
+
+def pacman_game(c):
+
+    storing_vlu = [3, 6, 2, 3, 7, 1, 2, 0]
+
+
+    def alpha_beta_pruning(node, depth, alpha, beta, find_powerful_plyer):
+        if depth == 3:
+            return node[0]
+
+        if find_powerful_plyer:
+            searching_max_evalution_value = float('-inf')
+
+            for i in range(2):
+
+                select_vlue = alpha_beta_pruning(storing_vlu[2*i:2*i+2], depth + 1, alpha, beta, False)
+                searching_max_evalution_value = max(searching_max_evalution_value, select_vlue)
+                alpha = max(alpha, select_vlue)
+
+                if beta &lt;= alpha:
+
+                    break
+
+            return searching_max_evalution_value
+
+        else:
+
+            searching_min_evalution_value = float('inf')
+
+            for i in range(2):
+                select_vlue = alpha_beta_pruning(storing_vlu[2*i:2*i+2], depth + 1, alpha, beta, True)
+                searching_min_evalution_value = min(searching_min_evalution_value, select_vlue)
+                beta = min(beta, select_vlue)
+
+                if beta &lt;= alpha:
+
+                    break
+
+            return searching_min_evalution_value
+
+
+    fix_vlu = alpha_beta_pruning(storing_vlu, 0, float('-inf'), float('inf'), True)
+</font>    print(f" Value where dark magic is {fix_vlu}.")
+
+<a name="1"></a><font color="#00FF00"><a href="match46-0.html#1" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_6.gif"/></a>
+
+    verify_drk_mgic = False
+
+    if fix_vlu &lt; (max(storing_vlu) - c):
+        verify_drk_mgic = True
+        collecting_finl_result = max(storing_vlu) - c
+        print(f"If advantageous for Pacman. New value: {collecting_finl_result}")
+
+    else:
+        print(f"If not advantageous for Pacman. New value.")
+</font>
+
+pacman_game(2)
+pacman_game(5)</pre>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/9/22301107_LAB3_SEC9_Sowmik_Das_Gupta_-_SOWMIK_DAS_GUPTA.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/9/22301107_LAB3_SEC9_Sowmik_Das_Gupta_-_SOWMIK_DAS_GUPTA.py<p></p><pre>
+#===================Task-01=====================
+<a name="1"></a><font color="#00FF00"><a href="match169-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_12.gif"/></a>
+
+import random
+
+def alpha_beta_prounning(node, depth, alpha, beta, max_player):
+    if depth == 0 or node.end_point():
+        return node.evaluate()
+    if max_player:
+        val = float('-inf')
+        for i in node.generate_child():
+            val = max(val, alpha_beta_prounning(i, depth-1, alpha, beta, False))
+            alpha = max(alpha, val)
+</font>            if beta &lt;= alpha:
+                break
+        return val
+<a name="0"></a><font color="#FF0000"><a href="match169-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_20.gif"/></a>
+
+    else:
+        val = float('inf')
+        for i in node.generate_child():
+            val = min(val, alpha_beta_prounning(i, depth-1, alpha, beta, True))
+            beta = min(beta, val)
+            if beta &lt;= alpha:
+                break
+        return val
+
+class Node:
+    def __init__(self, name):
+        self.name = name
+        self.children = []
+
+    def end_point(self):
+        return not self.children
+
+    def evaluate(self):
+        return random.choice([-1, 1])
+
+    def generate_child(self):
+</font>        #Generate some sample children for demonstration
+        if not self.children:
+            for i in range(2):  #Generate 2 children for each node
+                child = Node(f"{self.name}_child_{i}")
+                self.children.append(child)
+        return self.children
+
+def simulate_game(first):
+    root = Node("Root")
+    total = 0
+    curr_player = first
+    winner_arr = []
+
+    ones = 0
+    while total &lt; 3:
+        result = alpha_beta_prounning(root, 5, float('-inf'), float('inf'), curr_player)
+        if result == 1:
+            ones += 1
+            winner = "Sub-Zero"
+        else:
+            winner = "Scorpion"
+        winner_arr.append(winner)
+        if curr_player == 0:
+            curr_player = 1
+        else:
+            curr_player = 0
+        total += 1
+    if ones &gt; 1:
+        print("\nGame Winner: Sub-Zero")
+    else:
+        print("\nGame Winner: Scorpion")
+    print(f"Total Rounds Played: {total}")
+    for i, j in enumerate(winner_arr, start=1):
+        print("Winner of Round", i, ":", j)
+
+#start the game with first player
+simulate_game(0)
+
+#===================Task-02=====================
+def pacman_game(c):
+    score_arr = [3, 6, 2, 3, 7, 1, 2, 0]
+    left_subtree = [min(score_arr[0:2]), min(score_arr[2:4])]
+<a name="2"></a><font color="#0000FF"><a href="match169-1.html#2" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_6.gif"/></a>
+
+    right_subtree = [min(score_arr[4:6]), min(score_arr[6:8])]
+    left_max = max(left_subtree)
+
+    max_right = max(right_subtree)
+    no_dm = max(max_right, left_max)  #dm = dark magic
+    left_dm = max(score_arr[0:4]) - c
+</font>    right_dm = max(score_arr[4:8]) - c
+    use_dm = max(right_dm, left_dm)
+    if use_dm &gt; no_dm:
+        return f"The new minimax value is {use_dm}. Pacman goes right and uses dark magic."
+    else:
+        return f"The minimax value is {no_dm}. Pacman does not use dark magic."
+print(pacman_game(2))
+print(pacman_game(5))</pre>
+</body>
+</html>

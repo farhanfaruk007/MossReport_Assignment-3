@@ -1,0 +1,188 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/8/22101193_Md_Ashraful_Alam_08_-_MD_ASHRAFUL_ALAM.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/8/22101193_Md_Ashraful_Alam_08_-_MD_ASHRAFUL_ALAM.py<p></p><pre>
+#---------------------------------------------------Part-01 STARTS HERE-------------------------------------------------
+import random 
+def randValue():
+    return random.choice([1,-1])
+
+tree = { 
+    'A': ['B', 'C'], 
+    'B': ['D','E'], 
+    'C': ['F', 'G'], 
+    'D': ['I', 'J'], 
+    'E': ['K', 'L'], 
+    'F': ['M', 'N'], 
+    'G':['O', 'P'], 
+    'I':[None, None],
+    'J':[None, None],
+    'K':[None, None],
+    'L':[None, None],
+    'M':[None, None],
+    'N':[None, None],
+    'O':[None, None],
+    'P':[None, None]
+    
+}
+
+
+def minimax(node, is_max_p, alpha, beta):
+   
+    if node not in tree: 
+        return node 
+
+    children = tree[node]
+<a name="0"></a><font color="#FF0000"><a href="match204-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_11.gif"/></a>
+
+    if is_max_p:
+        maxEval = float('-inf')
+        for child in children:
+            eval = minimax(child, False, alpha, beta)
+            maxEval = max(maxEval, eval)
+            alpha = max(alpha, eval)
+            if beta &lt;= alpha:
+                break  
+        return maxEval
+    else:
+        minEval = float('inf')
+        for child in children:
+            eval = minimax(child, True, alpha, beta)
+            minEval = min(minEval, eval)
+            beta = min(beta, eval)
+</font>            if beta &lt;= alpha:
+                break  
+        return minEval
+
+
+
+
+
+def GamePlay(starting_player):
+
+    scorpion, subZero = 0, 0
+    roundWinners = []
+    for i in range(3):
+        # Reseting leaf Values 
+        nodes = ['I','J', 'K', 'L', 'M', 'N', 'O', 'P'] 
+        for n in nodes: 
+            tree[n] = [randValue() ,randValue()] 
+        value = minimax('A', True, float('-inf'), float('inf')) 
+        if value == 1:
+            roundWinners.append("Sub-Zero")
+            subZero += 1
+        else:
+            roundWinners.append("Scorpion")
+            scorpion += 1 
+    if scorpion &gt; subZero:
+        print("Game Winner: Scorpion")
+    else:
+        print("Game Winner: Sub-Zero") 
+
+    print("Total Rounds Played: 3") 
+    
+    for i in range(3):
+        print(f"Winner of Round {i+1}: {roundWinners[i]}")
+
+
+turn = input('Enter first turn (0/1): ')
+GamePlay(turn)
+#-----------------------------------------------part-01 ENDS HERE--------------------------------------------------------
+
+
+#---------------------------------------------- Part-02 STARTS HERE----------------------------------------------------------------
+
+tree = { 
+    'A': ['B', 'C'], 
+    'B': ['D','E'], 
+    'C': ['F', 'G'], 
+    'D': [3,6], 
+    'E': [2, 3], 
+    'F': [7, 1], 
+    'G': [2, 0] 
+} 
+
+
+def modifiedMinimax(node,  alpha, beta):
+
+   
+    if node not in tree: 
+        return node 
+
+    children = tree[node]
+    
+    maxEval = float('-inf')
+    for child in children:
+        eval = modifiedMinimax(child, alpha, beta)
+        
+
+        maxEval = max(maxEval, eval)
+        alpha = max(alpha, eval)
+        if beta &lt;= alpha:
+            break  
+    return maxEval  
+    
+
+def minimax(node, is_max_p, alpha, beta):
+   
+    if node not in tree: 
+        return node 
+
+    children = tree[node]
+<a name="1"></a><font color="#00FF00"><a href="match204-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_11.gif"/></a>
+
+    if is_max_p:
+        maxEval = float('-inf')
+        for child in children:
+            eval = minimax(child, False, alpha, beta)
+            maxEval = max(maxEval, eval)
+            alpha = max(alpha, eval)
+            if beta &lt;= alpha:
+                break  
+        return maxEval
+    else:
+        minEval = float('inf')
+        for child in children:
+            eval = minimax(child, True, alpha, beta)
+            minEval = min(minEval, eval)
+            beta = min(beta, eval)
+</font>            if beta &lt;= alpha:
+                break  
+        return minEval
+
+
+
+def pathFinderDark(node): 
+    while node:
+        for k,v in tree.items(): 
+            for val in v:
+                if val == node:
+                    if k == 'C':
+                        return "Right"
+                    
+                    node = k 
+    return "left" 
+
+
+def pacman_game(c): 
+    res1 = minimax('A', True, float("-inf"), float("inf")) 
+    res2 = modifiedMinimax('A', float('-inf'), float('inf'))   
+
+    newValue = res2 - c 
+
+    if newValue &gt; res1: 
+        
+        print(f"The new maximum value is {newValue}. Packman goes {pathFinderDark(res2)} and uses dark magic")  
+    else:
+        print(f"The minmax value is {res1}. Packman does not use dark magic")
+
+
+c = int(input('Enter: ')) 
+pacman_game(c)
+    
+#------------------------------------Part-02 ENDS HERE------------------------------------------------------------</pre>
+</body>
+</html>

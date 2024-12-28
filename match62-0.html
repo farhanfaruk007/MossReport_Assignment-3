@@ -1,0 +1,304 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/8/22201643_cse422_lab_3__MD.REFATH_HOSSAIN.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/8/22201643_cse422_lab_3__MD.REFATH_HOSSAIN.py<p></p><pre>
+# -*- coding: utf-8 -*-
+
+
+#part-1
+import random
+
+<a name="1"></a><font color="#00FF00"><a href="match62-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_11.gif"/></a>
+
+def alpha_beta_pruning(node, depth, alpha, beta, is_maximizing_player):
+    if depth == 5 or type(node) is not list:  # Base case: maximum depth or leaf node reached
+        return node
+
+    if is_maximizing_player:  # Maximizing player (Sub-Zero)
+        max_eval = float('-inf')
+        for child in node:
+            eval_value = alpha_beta_pruning(child, depth + 1, alpha, beta, False)
+            max_eval = max(max_eval, eval_value)
+            alpha = max(alpha, eval_value)
+            if beta &lt;= alpha:
+                break  # Beta cutoff
+        return max_eval
+    else:  # Minimizing player (Scorpion)
+        min_eval = float('inf')
+        for child in node:
+            eval_value = alpha_beta_pruning(child, depth + 1, alpha, beta, True)
+            min_eval = min(min_eval, eval_value)
+            beta = min(beta, eval_value)
+            if beta &lt;= alpha:
+                break  # Alpha cutoff
+        return min_eval
+
+
+def simulate_mortal_kombat(starting_player):
+    rounds_played = 0
+    current_player = starting_player
+    round_results = []
+
+    # Randomly generate the game tree for 3 rounds with leaf node values -1 or 1
+    game_tree = [[random.choice([-1, 1]) for _ in range(2)] for _ in range(3)]
+</font>
+<a name="2"></a><font color="#0000FF"><a href="match62-1.html#2" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_4.gif"/></a>
+
+    for i in range(len(game_tree)):
+        # Determine the result of the current round
+        result = alpha_beta_pruning(game_tree[i], 0, float('-inf'), float('inf'), current_player == 1)
+        rounds_played += 1
+
+        # Determine the winner of the round
+        round_winner = "Sub-Zero" if result == 1 else "Scorpion"
+        round_results.append(f"Winner of Round {i + 1}: {round_winner}")
+
+        # Switch the starting player for the next round
+        current_player = 1 if current_player == 0 else 0
+</font>
+    # Count wins to determine the overall game winner
+    sub_zero_wins = sum(1 for result in round_results if "Sub-Zero" in result)
+    scorpion_wins = sum(1 for result in round_results if "Scorpion" in result)
+    game_winner = "Sub-Zero" if sub_zero_wins &gt; scorpion_wins else "Scorpion"
+
+    # Output results
+    print(f"Game Winner: {game_winner}")
+    print(f"Total Rounds Played: {rounds_played}")
+    for result in round_results:
+        print(result)
+
+
+# Simulate the game with Scorpion starting
+simulate_mortal_kombat(0)
+
+
+print()
+
+#part-2
+def pacman_game(c):
+    # Leaf node storing_vlu
+<a name="0"></a><font color="#FF0000"><a href="match62-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_13.gif"/></a>
+
+    storing_vlu = [3, 6, 2, 3, 7, 1, 2, 0]
+
+
+    def alpha_beta_pruning(node, depth, alpha, beta, find_powerful_plyer):
+        if depth == 3:
+            return node[0]
+
+
+    # checking plyer information which is correct or not for both condition
+
+        if find_powerful_plyer:
+            searching_max_evalution_value = float('-inf')
+
+            for i in range(2):
+
+                select_vlue = alpha_beta_pruning(storing_vlu[2*i:2*i+2], depth + 1, alpha, beta, False)
+                searching_max_evalution_value = max(searching_max_evalution_value, select_vlue)
+                alpha = max(alpha, select_vlue)
+
+                if beta &lt;= alpha:
+
+                    break
+
+            return searching_max_evalution_value
+
+        else:
+
+            searching_min_evalution_value = float('inf')
+
+            for i in range(2):
+                select_vlue = alpha_beta_pruning(storing_vlu[2*i:2*i+2], depth + 1, alpha, beta, True)
+                searching_min_evalution_value = min(searching_min_evalution_value, select_vlue)
+                beta = min(beta, select_vlue)
+
+                if beta &lt;= alpha:
+
+                    break
+
+            return searching_min_evalution_value
+
+
+    fix_vlu = alpha_beta_pruning(storing_vlu, 0, float('-inf'), float('inf'), True)
+</font>    #print(f" Value where dark magic is {fix_vlu}.")
+
+    # verify the ultimte goal
+<a name="3"></a><font color="#00FFFF"><a href="match62-1.html#3" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_3_2.gif"/></a>
+
+    verify_drk_mgic = False
+
+    if fix_vlu &lt; (max(storing_vlu) - c):
+        verify_drk_mgic = True
+        collecting_finl_result = max(storing_vlu) - c
+        print(f"The new minimax value is : {collecting_finl_result} Pacman goes right and uses dark magic")
+
+    else:
+        print(f"The minimax value is {fix_vlu}. Pacman does not use dark magic")
+</font>
+
+pacman_game(2)
+pacman_game(5)
+
+
+#cf-550-c sol
+a = '23423345345345345345345'
+idx = 0
+c = 0
+#x = a.split()
+zero = [0, 4, 8, 12, 16, 20]  # only 0 thakleo ans
+two = [3, 7, 11, 15, 19]
+four = [2, 6, 10]
+six = [1, 5, 9]
+eight = [0, 4, 8, 12]  # only 8 thakleo ans
+efficient=[] # this gonna stiore the val that has been already checked so that it doesnt repeat the loops again
+
+for i in range(10 - 1, -1, -1):
+    if c==1:
+        break
+    a=a[:i+1:]
+    if a[i] == '0':
+        c += 1
+        print('yes')
+        print(0)
+        break
+    elif a[i] == '8':
+        c += 1
+        print('yes')
+        print(8)
+        break
+    elif a[i] == '2':
+        for k in range(i - 1, -1, -1):
+            if c==1:
+                break
+            if a[k] == '3' or a[k] == '7':
+                if a[k]=='3':
+                    store='3'
+                    print('yes')
+                    print(int(store + '2'))
+                    c += 1
+                    break
+                else:
+                    store='7'
+
+                    print('yes')
+                    print(int(store + '2'))
+                    c += 1
+                    break
+
+
+            elif a[k] == '1' or a[k] == '5' or a[k]=='9':
+                if a[k]=='1':
+                    store='1'
+                elif a[k]=='9':
+                    store='9'
+                else:
+                    store='5'
+                idx = k
+                for k1 in range(idx - 1, -1, -1):
+                    if int(a[k1]) % 2 == 1:
+                        if idx==0:
+                            print('yes')
+                            print(int(a[k1] + '2'))
+                            c += 1
+                            break
+                        else:
+
+                            print('yes')
+                            print(int(a[k1] +store+ '2'))
+                            c += 1
+                            break
+    elif a[i] == '4':
+        if c==1:
+            break
+        for k in range(i - 1, -1, -1):
+            if c==1:
+                break
+            if a[k] == '2' or a[k] == '6':
+                if a[k]=='2':
+                    store='2'
+                    #print('yes')
+                    #print(int(store + '4'))
+                    c += 1
+                    break
+                else:
+                    store='6'
+                    #print('yes')
+                    #print(int(store+ '4'))
+                    c += 1
+                    break
+
+
+            elif a[k] == '4' or a[k] == '8':
+                if a[k]=='4':
+                    store='4'
+                else:
+                    store='8'
+                idx = k
+                for k1 in range(idx , -1, -1):
+                    if int(a[k1]) % 2 == 1:
+                        if idx==0:
+                            #print('yes')
+                            #print(int(a[k1] + '4'))
+                            c += 1
+                            break
+                        else:
+
+                            #print('yes')
+                            #print(int(a[k1] +store+ '4'))
+                            c += 1
+                            break
+    elif a[i] == '6':
+
+        for k in range(i - 1, -1, -1):
+            if c==1:
+                break
+            if a[k] == '1' or a[k] == '5' or a[k] == '9':
+                if a[k]=='1':
+                    store='1'
+                    #print('yes')
+                    #print(int(store + '6'))
+                    c += 1
+                    break
+                elif a[k]=='5':
+                    store='5'
+                    #print('yes')
+                    #print(int(store + '6'))
+                    c += 1
+                    break
+                else:
+                    store='9'
+                   # print('yes')
+                    #print(int(store + '6'))
+                    c += 1
+                    break
+
+            elif a[k] == '3' or a[k] == '7':
+                if a[k]=='3':
+                    store='3'
+                else:
+                    store='7'
+                idx = k
+                for k1 in range(idx - 1, -1, -1):
+                    if int(a[k1]) % 2 == 1:
+                        if idx==0:
+                            #print('yes')
+                            #print(int(a[k1] + '6'))
+                            c += 1
+                            break
+                        else:
+
+                            #print('yes')
+                            #print(int(a[k1] +store+ '6'))
+                            c += 1
+                            break
+
+if c == 0:
+    print('no')
+
+</pre>
+</body>
+</html>

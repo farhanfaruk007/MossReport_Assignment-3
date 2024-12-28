@@ -1,0 +1,181 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/2/22301199_lab3_sec2_-_MOHAMMED_AL_WASEE.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/2/22301199_lab3_sec2_-_MOHAMMED_AL_WASEE.py<p></p><pre>
+<a name="2"></a><font color="#0000FF"><a href="match199-1.html#2" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_3.gif"/></a>
+
+def alpha_beta(position,depth,alpha,beta,maximizingplayer,adj_list,utility_dict):
+    if depth == 0:
+        return utility_dict[position]
+
+
+    if maximizingplayer:
+        maxEval = -9999999
+        for i in adj_list[position]:
+</font>            eval = alpha_beta(i,depth - 1,alpha,beta,False,adj_list,utility_dict)
+<a name="0"></a><font color="#FF0000"><a href="match199-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_3.gif"/></a>
+
+            maxEval = max(maxEval,eval)
+            alpha = max(alpha,eval)
+            if alpha &gt;= beta:
+                break
+        return maxEval
+    else:
+        minEval = 9999999
+        for i in adj_list[position]:
+</font>            eval = alpha_beta(i,depth - 1,alpha,beta,True,adj_list,utility_dict)
+            minEval = min(minEval,eval)
+            beta = min(beta,eval)
+            if alpha &gt;= beta:
+                break
+        return minEval
+
+
+
+
+
+
+import random
+
+player = int(input())
+
+player_name = ["Scorpion","Sub-Zero"]
+win_list = []
+
+for round in range(3):
+    adj_list = [[1,2],
+               [3,4],
+               [5,6],
+               [7,8],
+               [9,10],
+               [11,12],
+               [13,14],
+               [15,16],
+               [17,18],
+               [19,20],
+               [21,22],
+               [23,24],
+               [25,26],
+               [27,28],
+               [29,30],
+               [31,32],
+               [33,34],
+               [35,36],
+               [35,38],
+               [39,40],
+               [41,42],
+               [43,44],
+               [45,46],
+               [47,48],
+               [49,50],
+               [51,52],
+               [53,54],
+               [55,56],
+               [57,58]]
+
+    utility = [-1, 1]
+    utility_dict = {}
+    for i in range(28):
+        utility_dict[i + 31] = random.choice(utility)
+
+    if player == 0:
+        state = alpha_beta(0,5,-999999,999999,True,adj_list,utility_dict)
+        if state == 1:
+            win_list.append(0)
+        else:
+            win_list.append(1)
+
+        player = 1
+
+    else:
+        state = alpha_beta(0, 5, -999999, 999999,True,adj_list,utility_dict)
+        if state == 1:
+            win_list.append(1)
+        else:
+            win_list.append(0)
+
+        player = 0
+
+win_0 = 0
+win_1 = 0
+for i in win_list:
+    if i == 0:
+        win_0 += 1
+    else:
+        win_1 += 1
+
+if win_0 &gt; win_1:
+    print("Game Winner:" + player_name[0])
+else:
+    print("Game Winner:" + player_name[1])
+
+print("Total Rounds Played: 3")
+for i in win_list:
+    print("Winner of Round 1:" + player_name[i])
+
+
+# part 2
+cost = int(input())
+<a name="3"></a><font color="#00FFFF"><a href="match199-1.html#3" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_3_3.gif"/></a>
+
+def alpha_beta1(position,depth,alpha,beta,maximizingplayer,adj_list,utility_dict):
+    if depth == 0:
+        return utility_dict[position]
+
+
+    if maximizingplayer:
+        maxEval = -9999999
+        for i in adj_list[position]:
+</font>            eval = alpha_beta1(i,depth - 1,alpha,beta,False,adj_list,utility_dict)
+<a name="1"></a><font color="#00FF00"><a href="match199-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_3.gif"/></a>
+
+            maxEval = max(maxEval,eval)
+            alpha = max(alpha,eval)
+            if alpha &gt;= beta:
+                break
+        return maxEval
+    else:
+        minEval = 9999999
+        for i in adj_list[position]:
+</font><a name="4"></a><font color="#FF00FF"><a href="match199-1.html#4" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_4_3.gif"/></a>
+
+            eval = alpha_beta1(i,depth - 1,alpha,beta,True,adj_list,utility_dict)
+            minEval = min(minEval,eval)
+            beta = min(beta,eval)
+            if alpha &gt;= beta:
+                break
+        return minEval
+
+def alpha_beta1_darkmagic(position,depth,adj_list,utility_dict):
+</font>    if depth == 0:
+        return utility_dict[position]
+
+    maxEval = -9999999
+    for i in adj_list[position]:
+        eval = alpha_beta1_darkmagic(i,depth - 1,adj_list,utility_dict)
+        maxEval = max(maxEval,eval)
+    return maxEval
+
+adj_list = [[1,2],
+            [3,4],
+            [5,6],
+            [7,8],
+            [9,10],
+            [11,12],
+            [13,14]]
+
+
+utility_dict = {7 : 3,8 : 6,9 : 2,10 : 3,11 : 7,12 : 1,13 : 2,14 : 0}
+
+without_dark_magic = alpha_beta1(0, 3, -999999, 999999,True,adj_list,utility_dict)
+with_dark_magic = alpha_beta1_darkmagic(0, 3,adj_list,utility_dict)
+
+if without_dark_magic &gt;= with_dark_magic - cost:
+    print("The new minimax value is " + str(without_dark_magic) + ". Pacman does not use dark magic")
+else:
+    print("The new minimax value is " + str(with_dark_magic - cost) + ". Pacman goes right and uses dark magic")</pre>
+</body>
+</html>

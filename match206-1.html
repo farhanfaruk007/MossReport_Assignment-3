@@ -1,0 +1,129 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/7/22101118_tanzim_hossain_safin_cse422_07_assignment03_fall2024_py_-_TANZIM_HOSSAIN_SAFIN.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/7/22101364_Md_Rahim_bhuiyan_CSE422_07_Assignment03_Fall2024_-_MD_RAHIM_BHUIYAN.py<p></p><pre>
+import random
+
+######################## Part 1: Mortal Kombat ########################
+class mortal_kombat_arena:
+<a name="0"></a><font color="#FF0000"><a href="match206-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_14.gif"/></a>
+
+    def __init__(self, starting_character):
+        # 0 for Scorpion, 1 for Sub-Zero
+        self.current_character = starting_character  
+        self.match_history = []  
+        self.rounds_played = 0
+
+    def strategic_decision(self, layer, alpha, beta, is_player_turn):
+        if layer == 5:
+            # -1: Scorpion wins, 1: Sub-Zero wins
+            return random.choice([-1, 1])  
+
+        if is_player_turn:
+            optimal_score = float("-inf")  
+            for move in range(2):  
+                outcome = self.strategic_decision(layer + 1, alpha, beta, False)
+                optimal_score = max(optimal_score, outcome)
+</font>                alpha = max(alpha, outcome)
+                if alpha &gt;= beta:  
+                    break
+            return optimal_score
+        else:
+            optimal_score = float("inf")  
+            for move in range(2):  
+                outcome = self.strategic_decision(layer + 1, alpha, beta, True)
+                optimal_score = min(optimal_score, outcome)
+                beta = min(beta, outcome)
+                if alpha &gt;= beta: 
+                    break
+            return optimal_score
+
+    def conduct_tournament(self):
+        current_turn = self.current_character  
+        for _ in range(3):  
+            self.rounds_played += 1
+            result = self.strategic_decision(0, float("-inf"), float("inf"), current_turn == 1)
+            if result == -1:
+                self.match_history.append("Scorpion")
+            else:
+                self.match_history.append("Sub-Zero")
+            current_turn = 1 - current_turn  
+
+    def conclude_battle(self):
+        self.conduct_tournament()
+        
+        scorpion_wins = self.match_history.count("Scorpion")
+        subzero_wins = self.match_history.count("Sub-Zero")
+        overall_winner = "Scorpion" if scorpion_wins &gt; subzero_wins else "Sub-Zero"
+        return overall_winner, self.rounds_played, self.match_history
+
+
+# Input to choose starting character
+player_start = int(input("Choose starting character (0 for Scorpion, 1 for Sub-Zero): "))
+arena = mortal_kombat_arena(player_start)
+winner, rounds, match_outcome = arena.conclude_battle()
+
+
+print(f"Champion: {winner}")
+print(f"Total Rounds: {rounds}")
+for index, victor in enumerate(match_outcome, start=1):
+    print(f"Round {index}: {victor}")
+
+
+
+
+##########################################################################
+######################## Part 2: Games with Magic ########################
+
+
+def evaluate_tree(level, position, is_pacman_turn, leaf_scores, alpha, beta):
+    if level == 3:
+        return leaf_scores[position]
+
+    if is_pacman_turn:  
+        max_value = float('-inf')
+        for branch in range(2):  
+            result = evaluate_tree(level + 1, position * 2 + branch, False, leaf_scores, alpha, beta)
+            max_value = max(max_value, result)
+            alpha = max(alpha, max_value)
+            if alpha &gt;= beta:  
+                break
+        return max_value
+    else:  
+    # Ghost's decision
+        min_value = float('inf')
+        for branch in range(2): 
+            result = evaluate_tree(level + 1, position * 2 + branch, True, leaf_scores, alpha, beta)
+            min_value = min(min_value, result)
+            beta = min(beta, min_value)
+<a name="1"></a><font color="#00FF00"><a href="match206-0.html#1" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_12.gif"/></a>
+
+            if alpha &gt;= beta:  
+                break
+        return min_value
+
+
+def pacman_strategy(magic_power):
+    leaf_scores = [3, 6, 2, 3, 7, 1, 2, 0]
+    alpha = float('-inf')
+    beta = float('inf')
+
+    base_result = evaluate_tree(0, 0, True, leaf_scores, alpha, beta)
+    
+    left_magic_result = max(leaf_scores[:4]) - magic_power
+    right_magic_result = max(leaf_scores[4:]) - magic_power 
+</font>
+    if right_magic_result &gt; base_result:
+        print(f"The new minimax value is {right_magic_result}. Pacman goes right and uses dark magic.")
+    else:
+        print(f"The minimax value is {base_result}. Pacman does not use dark magic.")
+
+# Test the function
+pacman_strategy(2)
+pacman_strategy(5)
+</pre>
+</body>
+</html>

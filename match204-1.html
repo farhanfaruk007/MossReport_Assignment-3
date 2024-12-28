@@ -1,0 +1,153 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/8/22101193_Md_Ashraful_Alam_08_-_MD_ASHRAFUL_ALAM.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/9/24141249_LAB3_SEC9_MOSTAKIM_MAHMUD_MUGDHHA_-_MOSTAKIM_MAHMUD_MUGDHHA.py<p></p><pre>
+################ Part 1 #####################
+
+import random
+
+def game_tree(player, depth, maxi_d=5):  #maxi_d is the maximum depth
+    node = []
+    if depth == maxi_d:  #if this is the leaf node
+        leaf_value = random.choice([1, -1])
+        node.append(leaf_value)
+        node.append([])  #children value
+        return node
+    else:  # if not leaf
+        local_children = []  
+        for i in range(2):  #given that 2 is branch
+            next_node = game_tree(1 - player, depth + 1, maxi_d)
+            local_children.append(next_node)
+        node.append(None)
+        node.append(local_children)  #children value
+        return node
+
+def alphaBeta_pruning(a, b, node, maxi_p):
+    leaf_value, children = node
+
+    if leaf_value is not None:
+        return leaf_value
+
+<a name="0"></a><font color="#FF0000"><a href="match204-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_11.gif"/></a>
+
+    if maxi_p is True:
+        maxi_val = float('-inf')
+        for j in children:
+            val = alphaBeta_pruning(a, b, j, False)
+            maxi_val = max(maxi_val, val)
+            a = max(a, val)
+            if a &gt;= b:
+                break
+        return maxi_val
+    else:
+        min_val = float('inf')
+        for k in children:
+            val = alphaBeta_pruning(a, b, k, True)
+            min_val = min(min_val, val)
+            b = min(b, val)
+</font>            if a &gt;= b:
+                break
+        return min_val
+
+def mk(p_one):
+    attacker = p_one
+    rounds = []
+    round_count = 0
+    scor = 0
+    sub = 0
+
+    while round_count &lt; 5:
+        game_tree_root = game_tree(attacker, 0)
+        result = alphaBeta_pruning(float('-inf'), float('inf'), game_tree_root, attacker == 1)
+        if result == -1:
+            winner = "Scorpion"
+            scor += 1
+        elif result == 1:
+            winner = "Sub-Zero"
+            sub += 1
+
+        rounds.append(winner)
+
+        if rounds.count("Scorp") &gt; 2 or rounds.count("Sub-Z") &gt; 2:
+            break
+
+        attacker = 1 - attacker
+        round_count += 1
+
+    champ = ""
+    if scor &gt; sub:
+        champ = "Scorpion"
+    elif scor &lt; sub:
+        champ = "Sub-Zero"
+
+    return champ, len(rounds), rounds
+
+p_one = int(input(""))
+
+champ, round_num, rounds = mk(p_one)
+
+print(f"Game Winner: {champ}")
+print(f"Total Rounds Played: {round_num}")
+
+for m, n in enumerate(rounds, start=1):
+    print(f"Winner of Round {m}: {n}")
+
+
+################## Part 2 ################
+
+def alphaBetaPruning(node, turn, alpha, beta):
+    leaf_val, children = node
+
+    if leaf_val is not None:
+        return leaf_val
+
+<a name="1"></a><font color="#00FF00"><a href="match204-0.html#1" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_11.gif"/></a>
+
+    if turn:
+        maxi_val = float('-inf')
+        for child in children:
+            val = alphaBetaPruning(child, False, alpha, beta)
+            maxi_val = max(maxi_val, val)
+            alpha = max(alpha, maxi_val)
+            if beta &lt;= alpha:
+                break
+        return maxi_val
+    else:
+        min_val = float('inf')
+        for child in children:
+            val = alphaBetaPruning(child, True, alpha, beta)
+            min_val = min(min_val, val)
+            beta = min(beta, min_val)
+</font>            if beta &lt;= alpha:
+                break
+        return min_val
+
+def tree(values):
+    leaves = []
+    for i in values:
+        leaves.append((i, []))
+    while len(leaves) &gt; 1:
+        nxt_lev = []
+        for j in range(0, len(leaves), 2):
+            nxt_lev.append((None, [leaves[j], leaves[j + 1]]))
+        leaves = nxt_lev
+    return leaves[0]
+
+def pacman_game(c):
+    arr1_high = max(arr)-c
+    tree_structure = tree(arr) 
+    ans = alphaBetaPruning(tree_structure, True, float('-inf'), float('inf')) 
+
+    if ans &lt; arr1_high:
+        print(f"The new minimax value is {arr1_high}. Pacman goes right and uses dark magic")
+    elif ans &gt; arr1_high:
+        print(f"The minimax value is {ans}. Pacman does not use dark magic")
+
+c = int(input(""))
+arr = [3, 6, 2, 3, 7, 1, 2, 0]
+pacman_game(c)</pre>
+</body>
+</html>

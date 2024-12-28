@@ -1,0 +1,109 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/7/21201070_mehrin_cse422_07_a3_-_MEHRIN_AMIN_NEHA.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/7/21201626_jotham_Protik_Baroi_CSE422_07_Assignment03_Fall2024_-_JOTHAM_PROTIK_BAROI.py<p></p><pre>
+#1 Number
+
+<a name="0"></a><font color="#FF0000"><a href="match160-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_27.gif"/></a>
+
+def mk(a, b, mxpl, a_val, b_val):
+    abs_a=abs(a)
+    if b==0 or abs_a==1:
+        return a
+    if mxpl:
+        mx_rs=-float('inf')
+        for opt in [-1, 1]:
+            result=mk(opt, b - 1, False, a_val, b_val)
+            mx_rs=max(mx_rs, result)
+            a_val=max(a_val, result)
+            if b_val&lt;=a_val:
+                break
+        return mx_rs
+    else:
+        min_res=float('inf')
+        for opt in [-1, 1]:
+            result=mk(opt, b - 1, True, a_val, b_val)
+            min_res=min(min_res, result)
+            b_val=min(b_val, result)
+            if b_val&lt;=a_val:
+                break
+        return min_res
+def sg(start_var):
+    winners=[]
+    total_rnds=0
+    for rnd in range(1, 4):
+</font>        is_p1=start_var if rnd % 2==1 else 1-start_var
+        res = mk(0, 5, is_p1==1, -float('inf'), float('inf'))
+        total_rnds+=1
+        if res==1:
+            winners.append("Sub-Zero")
+        else:
+            winners.append("Scorpion")
+    sz_wins = winners.count("Sub-Zero")
+    sc_wins = winners.count("Scorpion")
+    overall_winner = "Sub-Zero" if sz_wins &gt; sc_wins else "Scorpion"
+    return overall_winner, total_rnds, winners
+with open('input.txt', 'r') as f:
+    for ln in f:
+<a name="1"></a><font color="#00FF00"><a href="match160-0.html#1" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_7.gif"/></a>
+
+        start_var= int(ln.strip())
+winner, rounds, round_winners =sg(start_var)
+with open('output.txt', 'w') as f:
+    f.write(f"Game Winner: {winner}\n")
+    f.write(f"Total Rounds Played: {rounds}\n")
+    for idx, r_winner in enumerate(round_winners, 1):
+        f.write(f"Winner of Round {idx}: {r_winner}\n")
+</font>print(f"Game Winner: {winner}")
+print(f"Total Rounds Played: {rounds}")
+for idx, r_winner in enumerate(round_winners, 1):
+    print(f"Winner of Round {idx}: {r_winner}")
+
+
+
+#2 Number
+def pcm(c):
+    vals = [3, 6, 2, 3, 7, 1, 2, 0]
+    def mmx(n, d, mx, a, b):
+        if d==3:
+            return vals[n]
+        if mx:
+            best = float('-inf')
+            for ch in range(2):
+                v = mmx(n * 2 + ch, d + 1, False, a, b)
+                best = max(best, v)
+                a = max(a, best)
+                if a &gt;= b:
+                    break
+            return best
+        else:
+            best = float('inf')
+            for ch in range(2):
+                v = mmx(n * 2 + ch, d + 1, True, a, b)
+                best = min(best, v)
+                b = min(b, best)
+                if a &gt;= b:
+                    break
+            return best
+    res = mmx(0, 0, True, float('-inf'), float('inf'))
+    lmax = max(vals[:4])
+    rmax = max(vals[4:])
+    lmag = lmax - c
+    rmag = rmax - c
+    if lmag &gt; rmag and lmag &gt; res:
+        out = f"The new minimax value is {lmag}. Pacman goes left and uses dark magic."
+    elif rmag &gt; res:
+        out = f"The new minimax value is {rmag}. Pacman goes right and uses dark magic."
+    else:
+        out = f"The minimax value is {res}. Pacman does not use dark magic."
+    print(out)
+c = int(input("Enter magic cost: "))
+pcm(c)
+
+
+</pre>
+</body>
+</html>

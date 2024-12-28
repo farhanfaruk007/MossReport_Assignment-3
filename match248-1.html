@@ -1,0 +1,171 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/9/21201281_LAB3_SEC9_Mushfiq_Zahid_-_MUSHFIQ_ZAHID.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/18/22201646_Abu_Jaham_Shaisab_CSE422_18_Assignment03_Fall2024_-_ABU_JAHAM_SHAISAB.py<p></p><pre>
+<a name="0"></a><font color="#FF0000"><a href="match248-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_15.gif"/></a>
+
+import random
+
+
+def maximize(depth, index, scores, alpha, beta):
+    max_check = float("-inf")  
+    for i in range(2):  
+        current_max = alpha_beta_pruning(depth + 1, index * 2 + i, False, scores, alpha, beta)
+        max_check = max(max_check, current_max)  
+        alpha = max(alpha, current_max)  
+        if beta &lt;= alpha:  
+            break
+    return max_check
+
+
+def minimize(depth, index, scores, alpha, beta):
+    min_check = float("inf")  
+    for i in range(2):  
+        current_max = alpha_beta_pruning(depth + 1, index * 2 + i, True, scores, alpha, beta)
+</font>        min_check = min(min_check, current_max) 
+        beta = min(beta, current_max)  
+        if beta &lt;= alpha:  
+            break
+    return min_check
+
+def alpha_beta_pruning(depth, index, current_player, scores, alpha, beta):
+   
+    if depth == 5:
+        return scores[index]
+    
+
+    if current_player == 0:  
+        return maximize(depth, index, scores, alpha, beta)
+    else:  
+        return minimize(depth, index, scores, alpha, beta)
+
+def random_utilities(branching_factor, depth):
+    total_leaf_nodes = branching_factor ** depth
+    utility_values = []
+    
+    for i in range(total_leaf_nodes):
+        utility_values.append(random.choice([-1, 1]))
+
+    return utility_values
+
+scores = random_utilities(2, 5)
+
+scorpion = 0
+result = []
+subzero = 0
+total_rounds = 0
+
+
+first_player = int(input("first player:"))
+current_player = first_player
+
+while scorpion &lt; 2 and subzero &lt; 2:
+    total_rounds += 1
+    
+    winner_utility = alpha_beta_pruning(0, 0, current_player, scores, float("-inf"), float("inf"))
+    
+    if winner_utility == -1:
+        scorpion += 1
+        result.append("Scorpion")
+    else:
+        subzero += 1
+        result.append("Sub-Zero")
+    
+    if current_player == 0:
+        current_player = 1
+    else:
+        current_player = 0
+
+print("part one")
+if scorpion &gt; subzero :
+    print(f"Game Winner: scorpion")
+else:
+    print(f"Game Winner: sub-zero")
+
+
+print(f"Total Rounds Played: {total_rounds}")
+
+for i in range(len(result)):
+    print(f"Winner of Round {i+1}: {result[i]}")
+
+
+
+
+
+def pacman_max(depth, index, scores, alpha, beta, c):
+  
+    max_check = float("-inf")
+    for i in range(2):  
+        current_max = alpha_beta_pruning(depth + 1, index * 2 + i, False, scores, alpha, beta, c)
+        max_check = max(max_check, current_max)
+        alpha = max(alpha, current_max)
+        if beta &lt;= alpha:  
+            break
+    return max_check
+
+
+def ghost_min(depth, index, scores, alpha, beta, c):
+   
+    min_check = float("inf")
+    for i in range(2):  
+        current_max = alpha_beta_pruning(depth + 1, index * 2 + i, True, scores, alpha, beta, c)
+        min_check = min(min_check, current_max)
+        beta = min(beta, current_max)
+        if beta &lt;= alpha:  
+            break
+    return min_check
+
+
+<a name="1"></a><font color="#00FF00"><a href="match248-0.html#1" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_4.gif"/></a>
+
+def alpha_beta_pruning(depth, index, is_pacman, scores, alpha, beta, c):
+  
+    if depth == 3:
+        return scores[index]
+
+    if is_pacman:  
+        return pacman_max(depth, index, scores, alpha, beta, c)
+</font>    else:  
+        return ghost_min(depth, index, scores, alpha, beta, c)
+
+
+
+scores = [3, 6, 2, 3, 7, 1, 2, 0]
+
+
+c = int(input("cost of dark magic : "))
+    
+    
+without_magic = alpha_beta_pruning(0, 0, True, scores, float("-inf"), float("inf"), c)
+    
+    
+ 
+    
+l_max = max(scores[:4])
+r_max = max(scores[4:])
+    
+left_magic = l_max - c
+right_magic = r_max - c
+
+print("part two")
+if left_magic &gt; without_magic or right_magic &gt; without_magic:
+    if left_magic &gt; right_magic:
+        
+        print(f"The new minimax value is{left_magic}. Pacman goes left and uses dark magic")
+    else:
+        
+        print(f"The new minimax value is {right_magic}. Pacman goes right and uses dark magic")
+else:
+    
+    print(f"The minimax value is {without_magic}. Pacman does not use dark magic")
+    
+
+
+
+
+</pre>
+</body>
+</html>

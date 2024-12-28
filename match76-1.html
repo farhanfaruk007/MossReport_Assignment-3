@@ -1,0 +1,136 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/9/22299312_LAB3_SEC9_MAIDUL_ISLAM_-_MAIDUL_ISLAM.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/10/22301196_CSE422_SEC10_LabAssignment3_-_MARZANUL_MOMENINE.py<p></p><pre>
+import random
+
+class GameTree:
+    @staticmethod
+    def search(position, level, is_max, lower_bound, upper_bound, evaluate, next_moves):
+        result = evaluate(position, level)
+        if result is not None:
+            return result
+            
+        moves = next_moves(position, level)
+        if is_max:
+            best_score = float('-inf')
+            for move in moves:
+<a name="5"></a><font color="#FF0000"><a href="match76-0.html#5" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_4.gif"/></a>
+
+                best_score = max(best_score, GameTree.search(move, level+1, False, lower_bound, upper_bound, evaluate, next_moves))
+                lower_bound = max(lower_bound, best_score)
+                if upper_bound &lt;= lower_bound:
+                    break
+            return best_score
+        else:
+            best_score = float('inf')
+            for move in moves:
+</font><a name="0"></a><font color="#FF0000"><a href="match76-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_20.gif"/></a>
+
+                best_score = min(best_score, GameTree.search(move, level+1, True, lower_bound, upper_bound, evaluate, next_moves))
+                upper_bound = min(upper_bound, best_score)
+                if upper_bound &lt;= lower_bound:
+                    break
+            return best_score
+
+class CombatSystem:
+    def __init__(self, initial_player):
+        self.active_player = initial_player
+        self.initial_player = initial_player
+        self.state_values = [None] * 63
+        self.match_history = []
+
+    def init_game_state(self):
+        for i in range(31, 63):
+            self.state_values[i] = random.choice([-1, 1])
+
+    def evaluate_state(self, position, level):
+        if position &gt;= 31:
+            return self.state_values[position]
+        return None
+
+    def generate_moves(self, position, level):
+        if position &gt;= 31:
+</font>            return []
+        return [2 * position + 1, 2 * position + 2]
+
+    def execute_round(self, active_player):
+        self.init_game_state()
+        is_max = active_player == random.choice([True, False])
+        outcome = GameTree.search(0, 0, is_max, float('-inf'), float('inf'), 
+                                self.evaluate_state, self.generate_moves)
+<a name="2"></a><font color="#0000FF"><a href="match76-0.html#2" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_10.gif"/></a>
+
+        victor = "Scorpion" if outcome == -1 else "Sub-Zero"
+        self.match_history.append(victor)
+        return victor
+
+    def execute_match(self):
+        p1_score = 0
+        p2_score = 0
+        current = self.initial_player
+        
+        for _ in range(3):
+            winner = self.execute_round(current)
+            if winner == "Scorpion":
+                p1_score += 1
+            else:
+                p2_score += 1
+            current = 1 - current
+</font>            
+        final_victor = "Scorpion" if p1_score &gt; p2_score else "Sub-Zero"
+        print(f"Game Winner: {final_victor}")
+        print(f"Total Rounds Played: 3")
+        for i in range(3):
+<a name="1"></a><font color="#00FF00"><a href="match76-0.html#1" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_10.gif"/></a>
+
+            print(f"Winner of Round {i+1}: {self.match_history[i]}")
+
+class MazeGame:
+    def __init__(self):
+        self.path_values = [3, 6, 2, 3, 7, 1, 2, 0]
+
+    def evaluate_position(self, position, level):
+        if level == 2:
+            return self.path_values[position]
+        return None
+
+    def generate_paths(self, position, level):
+        if level == 2:
+            return []
+</font>        return [2 * position + 1, 2 * position + 2]
+
+    def execute_game(self, power_cost):
+<a name="4"></a><font color="#FF00FF"><a href="match76-0.html#4" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_4_6.gif"/></a>
+
+        base_score = GameTree.search(0, 0, True, float('-inf'), float('inf'),
+                                   self.evaluate_position, self.generate_paths)
+                                   
+        if power_cost &gt;= base_score:
+            print(f"The minimax value is {base_score}. Pacman does not use dark magic")
+            return
+            
+        left_score = max(self.path_values[0:4]) - power_cost
+</font><a name="3"></a><font color="#00FFFF"><a href="match76-0.html#3" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_3_7.gif"/></a>
+
+        right_score = max(self.path_values[4:8]) - power_cost
+        
+        if right_score &gt; left_score:
+            print(f"The new minimax value is {right_score}. Pacman goes right and uses dark magic")
+        else:
+            print(f"The new minimax value is {left_score}. Pacman goes left and uses dark magic")
+
+# Game Execution
+initial_player = int(input("Enter the first player (0 for Scorpion, 1 for Sub-Zero): "))
+combat = CombatSystem(initial_player)
+combat.execute_match()
+
+print("\n")
+maze = MazeGame()
+maze.execute_game(2)
+maze.execute_game(5)</font></pre>
+</body>
+</html>

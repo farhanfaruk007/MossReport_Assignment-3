@@ -1,0 +1,214 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/2/21201638_NILOY_SARKAR_Lab3_SEC-02_FALL2024_-_NILOY_SARKAR.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/2/21201638_NILOY_SARKAR_Lab3_SEC-02_FALL2024_-_NILOY_SARKAR.py<p></p><pre>
+# LAB 03
+
+#Part 1
+
+import random
+
+
+<a name="1"></a><font color="#00FF00"><a href="match7-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_22.gif"/></a>
+
+class GameState:
+    def __init__(self, stg, out_come=None):
+        self.stg = stg
+        self.out_come = out_come
+        self.branch = []
+
+    def is_final(self):
+        return self.stg == 0 or self.out_come is not None
+
+    def add_branch(self, branch):
+        self.branch.append(branch)
+
+
+def create_game_tree(stg):
+    if stg == 0:
+        result = random.choice([-1, 1])  # -1 = Scorpion wins, 1 = Sub-Zero wins
+        return GameState(stg, result)
+
+    node = GameState(stg)
+    for i in range(2):
+        branch = create_game_tree(stg - 1)
+        node.add_branch(branch)
+    return node
+
+
+def alpha_beta_evaluation(node, alpha, beta, is_maximizing_player):
+    if node.is_final():
+        return node.out_come
+
+    if is_maximizing_player:
+        max_points = float('-inf')
+        for branch in node.branch:
+            points = alpha_beta_evaluation(branch, alpha, beta, False)
+            max_points = max(max_points, points)
+            alpha = max(alpha, points)
+</font>            if beta &lt;= alpha:
+                break  # Beta cutoff
+        return max_points
+<a name="2"></a><font color="#0000FF"><a href="match7-1.html#2" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_14.gif"/></a>
+
+    else:
+        min_points = float('inf')
+        for branch in node.branch:
+            points = alpha_beta_evaluation(branch, alpha, beta, True)
+            min_points = min(min_points, points)
+            beta = min(beta, points)
+            if beta &lt;= alpha:
+                break  # Alpha cutoff
+        return min_points
+
+
+def run_tournament(opening_player):
+    scorpion_points = 0
+    sub_zero_points = 0
+    game_results = []
+
+    # Loop for 3 rounds
+    for match_no in range(1, 4):
+        print(f"Winner of Round {match_no}: ", end="")
+
+        # Creating game tree (dep 3)
+        root = create_game_tree(3)
+        final_result = alpha_beta_evaluation(root, float('-inf'), float('inf'), opening_player == 1)
+
+        match_winner = "Sub-Zero" if final_result == 1 else "Scorpion"
+        game_results.append(match_winner)
+</font>
+        print(match_winner)
+
+        # Update scores
+<a name="3"></a><font color="#00FFFF"><a href="match7-1.html#3" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_3_5.gif"/></a>
+
+        if final_result == 1:
+            sub_zero_points += 1
+        else:
+            scorpion_points += 1
+
+        # Alternate  player
+        opening_player = 1 - opening_player
+
+    # Determine  tournament winner
+    overall_winner = "Scorpion" if scorpion_points &gt; sub_zero_points else "Sub-Zero"
+
+    # Print the final results in the desired format
+    print(f"\nGame Winner: {overall_winner}")
+    print(f"Total Rounds Played: 3")
+
+    for i in range(3):
+</font>        print(f"Winner of Round {i + 1}: {game_results[i]}")
+
+
+# Input for the starting player (0 for Scorpion, 1 for Sub-Zero)
+<a name="0"></a><font color="#FF0000"><a href="match7-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_52.gif"/></a>
+
+opening_turn = None
+while opening_turn not in [0, 1]:
+    try:
+        opening_turn = int(input("Select initial player (0 for Scorpion, 1 for Sub-Zero): "))
+        if opening_turn not in [0, 1]:
+            print("Invalid input. Please enter 0 for Scorpion or 1 for Sub-Zero.")
+    except ValueError:
+        print("Invalid input. Please enter a valid integer (0 for Scorpion, 1 for Sub-Zero).")
+
+run_tournament(opening_turn)
+
+
+#Part 2
+
+class pacman_game:
+    def __init__(self, Leaf_node, price_of_magic):
+        self.Leaf_node = Leaf_node
+        self.price_of_magic = price_of_magic
+        self.Memo = {}
+        self.outcome = self.evaluation()
+
+
+    def mini_max(self, Depth, idx, it_is_maximizing, Alpha, Beta):
+        # Define very large numbers instead of using float('inf')
+        INF = 1000000
+
+
+        # Use Memoization to avoid redundant calculations
+        if (Depth, idx, it_is_maximizing) in self.Memo:
+            return self.Memo[(Depth, idx, it_is_maximizing)]
+
+
+        # Terminal node case: determine value directly from Leaf_node
+        if not self.it_is_internal_node(Depth):
+            outcome = self.Leaf_node[idx]
+        elif it_is_maximizing:
+            max_evaluate = -INF
+            for i in range(2):
+                eval = self.mini_max(Depth + 1, idx * 2 + i, False, Alpha, Beta)
+                max_evaluate = max(max_evaluate, eval)
+                Alpha = max(Alpha, eval)
+                if Beta &lt;= Alpha:
+                    break
+            outcome = max_evaluate
+        else:
+            min_evaluate = INF
+            for i in range(2):
+                evaluate = self.mini_max(Depth + 1, idx * 2 + i, True, Alpha, Beta)
+                min_evaluate = min(min_evaluate, evaluate)
+                Beta = min(Beta, evaluate)
+                if Beta &lt;= Alpha:
+                    break
+            outcome = min_evaluate
+        self.Memo[(Depth, idx, it_is_maximizing)] = outcome
+        return outcome
+
+
+    def it_is_internal_node(self, Depth):
+        # Define internal node Depth range
+        return Depth &lt; 3
+
+
+    def evaluation(self):
+        Root_value_without_magic = self.mini_max(0, 0, True, -1000000, 1000000)
+
+
+        Left_subtree_max = max(self.Leaf_node[0:4])
+        Right_subtree_max = max(self.Leaf_node[4:8])
+
+
+        Left_Value_with_magic = Left_subtree_max - self.price_of_magic
+        Right_Value_with_magic = Right_subtree_max - self.price_of_magic
+
+
+        if Right_Value_with_magic &gt; Left_Value_with_magic:
+            Direction_with_magic = "right"
+            Value_with_magic = Right_Value_with_magic
+        else:
+            Direction_with_magic = "left"
+            Value_with_magic = Left_Value_with_magic
+
+
+        if Value_with_magic &gt; Root_value_without_magic:
+            return f"The new minimax value is {Value_with_magic}. Pacman goes {Direction_with_magic} and uses dark magic."
+        else:
+            return f"The minimax value is {Root_value_without_magic}. Pacman does not use dark magic."
+
+
+# Instantiate the game and directly pass input
+price_of_magic = int(input("Enter the cost of using dark magic (integer): "))
+Leaf_node = [3, 6, 2, 3, 7, 1, 2, 0]
+
+
+game = pacman_game(Leaf_node, price_of_magic)
+print(game.outcome)
+</font>
+# Part 3
+
+question1_ans = " Question 1 ans: No, In the context of Alpha-Beta Pruning, the first player is not always necessarily the maximizer node. It depends on the specific problem and the role of the players in the game."
+print(question1_ans)
+question2_ans = " Question 2 ans: No, alpha-beta pruning is designed for deterministic environments, and for stochastic environments, algorithms like Monte Carlo Tree Search (MCTS) are typically used instead."
+print(question2_ans)</pre>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/10/24241254_chowdhury_shadab_aiman_sec10_assignment3lab_-_CHOWDHURY_SHADAB_AIMAN.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/13/21301429_CSE422_Assignment03_Fall2024_-_MD._EAMIN.py<p></p><pre>
+import math
+<a name="2"></a><font color="#0000FF"><a href="match51-0.html#2" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_10.gif"/></a>
+
+import random
+
+
+def AlphaBetaPurning(depth, maxplayer, alpha, beta, cPlayer):
+    if depth == 0:
+
+        return random.choice([-1, 1])
+
+    if maxplayer:
+      max_cal = float('-inf')
+
+      for i in range(2):
+        eval =AlphaBetaPurning(depth-1,False,alpha,beta,cPlayer)
+        max_cal=max(max_cal,eval)
+</font>        alpha= max(alpha,eval)
+
+        if beta&lt;=alpha:
+          break
+
+<a name="3"></a><font color="#00FFFF"><a href="match51-0.html#3" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_3_5.gif"/></a>
+
+      return max_cal
+
+    else:
+      min_evaluate=float('inf')
+      for i in range(2):
+        eval =AlphaBetaPurning(depth-1,True,alpha,beta,cPlayer)
+        min_evaluate=min(min_evaluate,eval)
+</font>        beta=min(beta,eval)
+        if beta&lt;=alpha:
+          break
+      return min_evaluate
+print("Mortal Kombat game")
+def MortalKombat(starting_battler,r):
+  
+  rounds=r
+<a name="1"></a><font color="#00FF00"><a href="match51-0.html#1" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_22.gif"/></a>
+
+  r_winners=[]
+  currentPlayers= starting_battler
+
+  for i in range(1,rounds+1):
+    winner=AlphaBetaPurning(depth=5,maxplayer=(currentPlayers==1),alpha=float('-inf'),beta=float('inf'),cPlayer=currentPlayers)
+    if winner==-1:
+      r_winners.append("Scorpion")
+
+    else:
+      r_winners.append("Sub-Zero")
+    currentPlayers=1-currentPlayers
+
+  sco_wins=r_winners.count("Scorpion")
+  sub_wins=r_winners.count("Sub-Zero")
+
+  if sco_wins&gt;sub_wins:
+    game_winner="Scorpion"
+  else:
+    game_winner="Sub-Zero"
+
+  print(f"Game:Winner: {game_winner}")
+  print(f"Total Rounds Played: {rounds}")
+
+  for i,winner in enumerate(r_winners,start=1):
+    print(f"Winner of Round {i}: {winner}")
+
+starting_battler=int(input("Select the first fighter: Enter '0' for Scorpion or '1' for Sub-Zero: "))
+</font>r=3
+MortalKombat(starting_battler,r)
+
+
+print("pac-man game")
+<a name="0"></a><font color="#FF0000"><a href="match51-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_44.gif"/></a>
+
+def pacman_game(n):
+
+    leafScoresList=[3,6,2,3,7,1,2,0]
+
+    def FindMinmax():
+      lmin1 = min(leafScoresList[0:2])
+      lmin2 = min(leafScoresList[2:4])
+
+      lmax= max(lmin1,lmin2)
+
+      rmin1= min(leafScoresList[4:6])
+      rmin2= min(leafScoresList[6:8])
+
+      right_max=max(rmin1,rmin2)
+
+      return max(lmax,right_max)
+
+
+    def AlphaBetaPurning():
+      
+      alpha=float('-inf')
+      beta=float('inf')
+
+      lmin1=min(leafScoresList[0:2])
+      lmin2=min(leafScoresList[2:4])
+      left_max=max(lmin1,lmin2)
+
+      alpha=max(alpha,left_max)
+
+
+      rmin1=min(leafScoresList[4:6])
+
+      if rmin1&lt;=alpha:
+          return alpha
+      
+      rmin2=min(leafScoresList[6:8])
+      rmax=max(rmin1,rmin2)
+
+      alpha=max(alpha,rmax)
+
+      return alpha
+
+    Lmagic=max(leafScoresList[0:4])-n
+    rmagic=max(leafScoresList[4:8])-n
+
+    without_magic=FindMinmax()
+    if Lmagic &gt; without_magic and Lmagic&gt;rmagic:
+      return f"The new minimax value is {Lmagic} . Pacman goes left and uses dark magic."
+
+
+    elif rmagic &gt; without_magic and rmagic&gt;Lmagic:
+      return f"The new minimax value is {rmagic} .Pacman goes right and uses dark magic."
+
+
+
+    else:
+      return f"The miniamax value is {without_magic} .pacman does not use dark magic."
+</font>
+num= int(input("Enter the value of input C : "))
+print("pac-man game")
+print(pacman_game(num))
+
+</pre>
+</body>
+</html>

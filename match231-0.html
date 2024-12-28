@@ -1,0 +1,123 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/11/21201663_Mohammad_Ridwanul_Islam_CSE422_11_Lab_Assignment3_Fall2024_-_MOHAMMAD_RIDWANUL_ISLAM.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/11/21201663_Mohammad_Ridwanul_Islam_CSE422_11_Lab_Assignment3_Fall2024_-_MOHAMMAD_RIDWANUL_ISLAM.py<p></p><pre>
+#Task- 1
+import random as rd
+def AlphaBeta_Pruning(depth, alpha, beta, status, start_Fighter):
+    if depth== 0:
+        if start_Fighter== 0:
+            return -1  #Scorpion wins
+        else:
+            return 1  #Sub-Zero wins
+    if status== False:
+        min_val= float('inf')
+        for i in range(2):  #Branching factor= 2
+            val= AlphaBeta_Pruning(depth - 1, alpha, beta, True, 1 - start_Fighter)
+            min_val= min(min_val, val)
+            beta= min(beta, val)
+            if alpha &gt;= beta:
+                break  #Prune
+        return min_val
+    else:
+        max_val= float('-inf')
+        for i in range(2):  #Branching factor= 2 
+            val= AlphaBeta_Pruning(depth - 1, alpha, beta, False, 1 - start_Fighter)
+            max_val= max(max_val, val)
+            alpha= max(alpha, val)
+            if alpha &gt;= beta:
+                break  #Prune
+        return max_val
+
+def Simulate(first_Fighter):
+    scorpion_wins= 0
+    sub_zero_wins= 0
+    round_number= 0
+    round_results= []
+    current_Fighter= first_Fighter
+
+    while scorpion_wins &lt; 3 and sub_zero_wins &lt; 3:
+        round_number += 1
+        state= rd.choice([True,False])
+        result= AlphaBeta_Pruning(3, float('-inf'), float('inf'), state, current_Fighter)
+        
+        if result== -1:  #Scorpion wins
+            scorpion_wins += 1
+            round_results.append((round_number, "Scorpion"))
+        else:  #Sub-Zero wins
+            sub_zero_wins += 1
+            round_results.append((round_number, "Sub-Zero"))
+        current_Fighter= 1 - current_Fighter  #Another fighter for next round
+    #Overall winner
+    if scorpion_wins== 3:
+        Winner= "Scorpion" 
+    else:
+        Winner= "Sub-Zero"
+    return Winner, round_number, round_results
+
+print("0 for Scorpion, 1 for Sub-Zero")
+first_Fighter= int(input("Enter the first player: "))
+Winner, Total_Rounds, results= Simulate(first_Fighter)
+
+<a name="1"></a><font color="#00FF00"><a href="match231-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_7.gif"/></a>
+
+print(f"Game Winner: {Winner}")
+print(f"Total Rounds Played: {Total_Rounds}")
+for Round, Winner in results:
+    print(f"Winner of Round {Round}: {Winner}")
+    
+#Task- 2
+def Pacman_game(Cost):
+    leaf_nodes= [3, 6, 2, 3, 7, 1, 2, 0] #Leaf nodes
+    def AlphaBeta_Pruning_Pacman(Node, depth, alpha, beta, status):
+</font>        # Base case: we are at the leaf nodes (depth == 2)
+        if depth== 2:
+            if Node &lt; len(leaf_nodes):
+                return leaf_nodes[Node]
+            else:
+                return float('-inf')  #Invalid node, return a very low value
+        
+        if status== False:  #Ghost's turn (minimize)
+<a name="0"></a><font color="#FF0000"><a href="match231-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_17.gif"/></a>
+
+            min_val= float('inf')
+            for child in range(2):  #Ghost can go left or right
+                val= AlphaBeta_Pruning_Pacman(2 * Node + child, depth + 1, alpha, beta, True)
+                min_val= min(min_val, val)
+                beta= min(beta, val)
+                if alpha &gt;= beta:
+                    break  #Prune
+            return min_val
+        else: #Pacman's turn (maximize)
+            max_val= float('-inf')
+            for child in range(2):  #Pacman can go left or right
+                val= AlphaBeta_Pruning_Pacman(2 * Node + child, depth + 1, alpha, beta, False)
+                max_val= max(max_val, val)
+                alpha= max(alpha, val)
+</font>                if alpha &gt;= beta:
+                    break  #Prune
+            return max_val
+        
+    #value at the root without dark magic
+    root_value_no_magic= AlphaBeta_Pruning_Pacman(0, 0, float('-inf'), float('inf'), True)
+    #value at the root with dark magic
+    def with_dark_magic(Cost):
+        right_node= 2  # Pacman goes to the right (index 2 in the outcomes)
+        dark_magic_value= AlphaBeta_Pruning_Pacman(right_node, 0, float('-inf'), float('inf'), True) - Cost
+        return dark_magic_value
+    #Cost of using dark magic and compare with no magic strategy
+    dark_magic_value= with_dark_magic(Cost)
+    if dark_magic_value &gt; root_value_no_magic:
+        print(f"The new minimax value is {dark_magic_value}. Pacman goes right and uses dark magic.")
+        return dark_magic_value
+    else:
+        print(f"The minimax value is {root_value_no_magic}. Pacman does not use dark magic.")
+        return root_value_no_magic
+
+Cost = int(input("Cost of dark magic: "))
+Pacman_game(Cost)</pre>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/11/21201552_Anisha_Irin_Ahmed_CSE422_11_Lab_Assignment3_Fall2024_-_ANISHA_IRIN_AHMED.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/11/21201552_Anisha_Irin_Ahmed_CSE422_11_Lab_Assignment3_Fall2024_-_ANISHA_IRIN_AHMED.py<p></p><pre>
+#Part 1
+
+import random
+
+def alpha_beta(depth, Max, alpha, beta):
+    if depth == 5:  
+        return random.choice([-1, 1])
+
+    if Max:
+        maX = float('-inf')
+        for _ in range(2): 
+            val = alpha_beta(depth + 1, False, alpha, beta)
+            maX = max(maX, val)
+            alpha = max(alpha, val)
+            if beta &lt;= alpha:
+                break
+        return maX
+    else:
+        miN = float('inf')
+        for i in range(2): 
+            val = alpha_beta(depth + 1, True, alpha, beta)
+            miN = min(miN, val)
+            beta = min(beta, val)
+            if beta &lt;= alpha:
+                break
+<a name="1"></a><font color="#00FF00"><a href="match220-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_7.gif"/></a>
+
+        return miN
+
+def Game (starting_fighter):
+    rounds = 5
+    roundwinners = []
+    bortoman_fighter = starting_fighter
+
+    scorpion_wins = 0
+    subzero_wins = 0
+
+    for i in range(1, rounds + 1):
+        Max = (bortoman_fighter == 1)
+        roundwinner = alpha_beta(0, Max, float('-inf'), float('inf'))
+</font>
+<a name="0"></a><font color="#FF0000"><a href="match220-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_18.gif"/></a>
+
+        if roundwinner == 1:
+            roundwinners.append("Sub-Zero")
+            subzero_wins += 1
+        else:
+            roundwinners.append("Scorpion")
+            scorpion_wins += 1
+        if scorpion_wins == 3 or subzero_wins == 3:
+            break
+        bortoman_fighter = 1 - bortoman_fighter
+    if scorpion_wins &gt; subzero_wins:
+        gamewinner = "Scorpion"
+    else:
+        gamewinner = "Sub-Zero"
+
+    return gamewinner, roundwinners
+
+starting_fighter = int(input("Enter the first player: "))
+gamewinner, roundwinners = Game(starting_fighter)
+
+print(f"Game Winner: {gamewinner}")
+print(f"Total Rounds Played: {len(roundwinners)}")
+for i, winner in enumerate(roundwinners, 1):
+    print(f"Winner of Round {i}: {winner}")
+
+
+
+#Part 2
+
+def alpha_beta(node, depth, MaX, alpha, beta, leafnodes):
+</font>    if depth == 3:  
+        return leafnodes[node]
+
+    if MaX:
+        maX = float('-inf')
+        for i in range(2):
+            val = alpha_beta(node * 2 + i, depth + 1, False, alpha, beta, leafnodes)
+            maX = max(maX, val)
+            alpha = max(alpha, val)
+            if beta &lt;= alpha:
+                break
+        return maX
+    else:
+        miN = float('inf')
+        for i in range(2):
+            val = alpha_beta(node * 2 + i, depth + 1, True, alpha, beta, leafnodes)
+            miN= min(miN, val)
+            beta = min(beta, val)
+            if beta &lt;= alpha:
+                break
+        return miN
+
+def pacman_game(c):
+    leafnodes = [3, 6, 2, 3, 7, 1, 2, 0]
+
+    minimax = alpha_beta(0, 0, True, float('-inf'), float('inf'), leafnodes)
+    bamsubtree = max(min(leafnodes[0], leafnodes[1]), min(leafnodes[2], leafnodes[3]))
+    dansubtree = max(min(leafnodes[4], leafnodes[5]), min(leafnodes[6], leafnodes[7]))
+
+    bammagic = bamsubtree - c
+    danmagic = dansubtree - c
+
+    if bammagic &gt; minimax or danmagic &gt; minimax:
+        if danmagic &gt; bammagic:
+            print(f"The new minimax value is {danmagic}. Pacman goes right and uses dark magic.")
+        else:
+            print(f"The new minimax value is {bammagic}. Pacman goes left and uses dark magic.")
+    else:
+        print(f"The minimax value is {minimax}. Pacman does not use dark magic.")
+
+c = int(input("Enter the cost of dark magic : "))
+pacman_game(c)
+</pre>
+</body>
+</html>

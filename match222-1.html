@@ -1,0 +1,75 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/9/22101047_LAB03_SEC9_SaadmanBinJashim_-_SAADMAN_BIN_JASHIM.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/18/22301526_Md._Nurul_Amin_Khan_Dipto_CSE422_18_Assignment03_Fall2024_-_Md._Nurul_Amin_Khan_Dipto.py<p></p><pre>
+<a name="0"></a><font color="#FF0000"><a href="match222-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_39.gif"/></a>
+
+import random
+
+# Part 1
+
+def alpha_beta(curr_depth, index, player, game, alpha, beta, branching_factor, max_depth): 
+    if curr_depth == max_depth:
+        return game[index]
+    if player:
+        best = float('-inf') # Scorpion -&gt; Minimizing
+        for i in range(branching_factor): 
+            value = alpha_beta(curr_depth + 1, index * branching_factor + i, False, game, alpha, beta, branching_factor, max_depth) 
+            best = max(best, value) 
+            alpha = max(alpha, best) 
+            if beta &lt;= alpha: 
+                break
+        return best 
+    else:
+        best = float('inf') # Sub-Zero -&gt; Maximizing
+        for i in range(branching_factor): 
+            value = alpha_beta(curr_depth + 1, index * branching_factor + i, True, game, alpha, beta, branching_factor, max_depth) 
+            best = min(best, value) 
+            beta = min(beta, best) 
+            if beta &lt;= alpha: 
+                break
+        return best 
+</font>
+def MK(branching_factor, max_depth, total_rounds):
+    round_winners=[]
+    p1 = int(input("Enter Player No: "))
+    if p1 not in [0,1]:
+        print("Invalid Input")
+        return
+
+    for _ in range(total_rounds):
+        round_winners.append(alpha_beta(0, 0, p1, [random.choice([1,-1]) for _ in range(branching_factor**max_depth)], float('-inf'), float('inf'), branching_factor, max_depth))
+        p1=not p1
+
+    print(f"Game Winner: {"Scorpion" if round_winners.count(1) &lt; round_winners.count(-1) else "Sub-Zero"}")
+    print("Total Rounds Played:",total_rounds)
+
+    for i in range(len(round_winners)):
+        print(f"Winner of Round {i}: {'Sub-Zero' if round_winners[i] == 1 else 'Scorpion'}")
+
+# Driver Code 1
+MK(branching_factor=2, max_depth=5, total_rounds=3) 
+
+
+# Part 2
+
+def pacman_game(c):
+    game = [3, 6, 2, 3, 7, 1, 2, 0]
+    dM_left = max(game[:len(game)//2]) - c
+    dM_right = max(game[len(game)//2:]) - c
+    noDM = alpha_beta(0, 0, 1, game, float('-inf'), float('inf'), 2,3)
+
+
+    step = "left" if dM_left &gt; dM_right else "right"
+    dM = max(dM_left, dM_right)
+
+    return f"The new minimax value is {dM}. Pacman goes {step} and uses dark magic" if dM &gt; noDM else f"The minimax value is {noDM}. Pacman does not use dark magic"
+    
+# Driver Code 2
+print(pacman_game(2))
+print(pacman_game(5))</pre>
+</body>
+</html>

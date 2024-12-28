@@ -1,0 +1,82 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/3/22201665_azizul_kabir_jayed_CSE422_03_Lab_Assignment03_Fall2024_-_AZIZUL_KABIR_JAYED.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/3/22201665_azizul_kabir_jayed_CSE422_03_Lab_Assignment03_Fall2024_-_AZIZUL_KABIR_JAYED.py<p></p><pre>
+#########################
+import random
+import math
+def alpha_beta_pruning(tree,level,alpha,beta,idx,max_p):
+    if level == 0:
+        return tree[idx]
+    if max_p:
+        max_temp = -math.inf
+        for i in range(2):
+            temp1=alpha_beta_pruning(tree,level - 1,alpha,beta,idx*2+i,False)
+            max_temp = max(max_temp, temp1)
+            alpha = max(max_temp, alpha)
+            if alpha &gt;= beta:
+                break
+        return max_temp
+    else:
+        min_temp = math.inf
+        for i in range(2):
+            temp1=alpha_beta_pruning(tree,level-1,alpha,beta,idx*2+i,True)
+<a name="1"></a><font color="#00FF00"><a href="match203-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_16.gif"/></a>
+
+            min_temp = min(min_temp, temp1)
+            beta = min(min_temp, beta)
+            if alpha &gt;= beta:
+                break
+        return min_temp
+
+
+
+################################task1
+tree = [random.choice([-1, 1]) for i in range(30)]
+def mortal_kombat(first_num):
+    level = 5  
+    result = []
+    current = first_num
+    for i in range(3): 
+        max_player = current
+        winner_utility=alpha_beta_pruning(tree,  level, -math.inf, math.inf,0, max_player == 0)
+</font>        if winner_utility == 1:
+            result.append("Sub-Zero")
+        else:
+            result.append("Scorpion")
+        current = 1 - current  
+    if result.count("Scorpion") &gt; result.count("Sub-Zero"):
+        winner = "Scorpion"
+    elif result.count("Scorpion") &lt; result.count("Sub-Zero"):
+        winner = "Sub-Zero"
+    else:
+        winner = "Draw"
+    return winner, len(result), result
+user_input=int(input("please enter input for task1: "))
+temp = mortal_kombat(user_input)
+print(f"Game Winner: {temp[0]}\nTotal Rounds Played: {temp[1]}\nWinner of Round 1: {temp[2][0]}")
+
+
+
+##################################task2
+outcomes = [3, 6, 2, 3, 7, 1, 2, 0]
+previous = alpha_beta_pruning(outcomes, 3, -math.inf, math.inf,0, True)
+<a name="0"></a><font color="#FF0000"><a href="match203-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_18.gif"/></a>
+
+def pacman_game(c):
+    left = max(outcomes[:math.floor(len(outcomes) / 2)])
+    right = max(outcomes[math.floor(len(outcomes) / 2):])
+    if left &gt;= right and left - c &gt; previous:
+        return f"The new minimax value is {left - c}. Pacman goes Left and uses dark magic"
+    elif right &gt;= left and right - c &gt; previous:
+        return f"The new minimax value is {right - c}. Pacman goes Right and uses dark magic"
+    else:
+        return f"The minimax value is {previous}. Pacman does not use dark magic"
+</font>user_input=int(input("please enter input for task2:"))
+temp = pacman_game(user_input)
+print(temp)</pre>
+</body>
+</html>

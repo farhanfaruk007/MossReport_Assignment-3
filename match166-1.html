@@ -1,0 +1,116 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/2/20201125_Lab3_sec02_-_MST_SUSHMITA_KHATUN.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/4/21201799_Annesha_CSE422_04_assignment03_Fall2024_-_ANNESHA_DAS_PRITI.py<p></p><pre>
+
+# Problem 1: Mortal Kombat (Alpha-Beta Pruning)
+<a name="0"></a><font color="#FF0000"><a href="match166-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_35.gif"/></a>
+
+def mortal_kombat_alpha_beta(start_player):
+    players = {0: "Scorpion", 1: "Sub-Zero"}
+    max_depth = 5  # Maximum depth of the game tree
+
+    # Utility function to simulate leaf node values
+    def utility_value(player):
+        return -1 if player == 0 else 1
+
+    # Minimax with Alpha-Beta Pruning
+    def alpha_beta(depth, player, alpha, beta, maximizing_player):
+        if depth == max_depth:  # Reached a leaf node
+            return utility_value(player)
+        
+        if maximizing_player:
+            max_eval = float('-inf')
+            for next_player in [0, 1]:
+                eval = alpha_beta(depth + 1, next_player, alpha, beta, False)
+                max_eval = max(max_eval, eval)
+                alpha = max(alpha, eval)
+                if beta &lt;= alpha:  # Beta cut-off
+                    break
+            return max_eval
+        else:
+            min_eval = float('inf')
+            for next_player in [0, 1]:
+                eval = alpha_beta(depth + 1, next_player, alpha, beta, True)
+                min_eval = min(min_eval, eval)
+                beta = min(beta, eval)
+                if beta &lt;= alpha:  # Alpha cut-off
+                    break
+            return min_eval
+
+    # Simulate the game
+    rounds = []
+    current_player = start_player
+</font>    depth = 0
+    while depth &lt; max_depth:
+        winner = alpha_beta(depth, current_player, float('-inf'), float('inf'), True)
+        rounds.append((depth + 1, players[current_player] if winner &gt; 0 else "Tie"))
+        current_player = 1 - current_player  # Alternate players
+        depth += 1
+
+    # Output the result
+    print("Game Results:")
+    for round_number, winner in rounds:
+        print(f"Round {round_number}: Winner - {winner}")
+    print("Final Winner:", players[1 - current_player])
+
+# Example Usage for Mortal Kombat
+# mortal_kombat_alpha_beta(0)  # 0 for Scorpion, 1 for Sub-Zero
+
+
+# Problem 2: Pacman with Dark Magic (Minimax)
+def pacman_game(c):
+    outcomes = [3, 6, 2, 3, 7, 1, 2, 0]  # Leaf node outcomes
+    branching_factor = 2
+
+    # Minimax function
+    def minimax(depth, index, is_maximizing, dark_magic):
+        if depth == 3:  # Reached a leaf node
+<a name="1"></a><font color="#00FF00"><a href="match166-0.html#1" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_7.gif"/></a>
+
+            return outcomes[index] - dark_magic if dark_magic else outcomes[index]
+        
+        if is_maximizing:
+            max_val = float('-inf')
+            for i in range(branching_factor):
+                val = minimax(depth + 1, index * 2 + i, False, dark_magic)
+</font>                max_val = max(max_val, val)
+            return max_val
+        else:
+            min_val = float('inf')
+            for i in range(branching_factor):
+                val = minimax(depth + 1, index * 2 + i, True, dark_magic)
+                min_val = min(min_val, val)
+            return min_val
+
+    # Evaluate both subtrees (left and right)
+    left_value = minimax(1, 1, False, c)
+    right_value = minimax(1, 2, False, c)
+
+    # Evaluate both subtrees without dark magic
+    left_dark_magic = minimax(1, 1, False, 0) - c
+    right_dark_magic = minimax(1, 2, False, 0) - c
+
+    # Output results
+    print("Without Dark Magic:")
+    print(f"Left Subtree Value: {left_value}")
+    print(f"Right Subtree Value: {right_value}")
+    
+    print("\nWith Dark Magic:")
+    print(f"Left Subtree Value: {left_dark_magic}")
+    print(f"Right Subtree Value: {right_dark_magic}")
+
+    print("\nBest Strategy:")
+    if max(left_value, right_value) &gt; max(left_dark_magic, right_dark_magic):
+        print("Do not use dark magic.")
+    else:
+        print("Use dark magic.")
+
+# Example Usage for Pacman
+# pacman_game(2)  # Replace 2 with the cost of dark magic
+</pre>
+</body>
+</html>

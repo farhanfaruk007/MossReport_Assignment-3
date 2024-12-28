@@ -1,0 +1,122 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/8/21301035_omar_08_-_OMAR_NASIF_CHOWDHURY.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/17/21301591_Abdullah_CSE422_17_Assignment03_Fall2024.py_-_ABDULLAH_IBNA_SIDDIQUIE.py<p></p><pre>
+# Mortal Kombat Simulation
+<a name="0"></a><font color="#FF0000"><a href="match173-0.html#0" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_29.gif"/></a>
+
+class MortalKombat:
+    def __init__(self, first_player):
+        # 0 for Scorpion, 1 for Sub-Zero
+        self.first_player = first_player
+        self.max_depth = 5  # Depth of game tree
+        self.branching_factor = 2  # Choices per turn
+
+    def alpha_beta(self, depth, alpha, beta, is_subzero_turn):
+        # Base case: leaf nodes
+        if depth == self.max_depth:
+            # -1: Scorpion wins, 1: Sub-Zero wins
+            return -1 if is_subzero_turn else 1
+
+        if is_subzero_turn:  # Sub-Zero maximizes score
+            best_score = float('-inf')
+            for _ in range(self.branching_factor):
+                score = self.alpha_beta(depth + 1, alpha, beta, False)
+                best_score = max(best_score, score)
+                alpha = max(alpha, score)
+                if beta &lt;= alpha:  # Prune branches
+                    break
+            return best_score
+        else:  # Scorpion minimizes score
+            best_score = float('inf')
+            for _ in range(self.branching_factor):
+                score = self.alpha_beta(depth + 1, alpha, beta, True)
+                best_score = min(best_score, score)
+                beta = min(beta, score)
+                if beta &lt;= alpha:
+</font>                    break
+            return best_score
+
+    def simulate(self):
+        rounds = []
+        current_player = self.first_player
+        for round_number in range(3):  # Play 3 rounds
+            winner = self.alpha_beta(0, float('-inf'), float('inf'), current_player == 1)
+            rounds.append("Sub-Zero" if winner == 1 else "Scorpion")
+            current_player = 1 - current_player  # Alternate who starts
+        return rounds
+
+
+# Pacman Game with Magic
+<a name="1"></a><font color="#00FF00"><a href="match173-0.html#1" target="0"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_6.gif"/></a>
+
+class PacmanGame:
+    def __init__(self):
+        # Outcomes at leaf nodes of the game tree
+        self.scores = [3, 6, 2, 3, 7, 1, 2, 0]
+
+    def alpha_beta(self, depth, alpha, beta, is_ghost_turn):
+</font>        # Base case: leaf nodes
+        if depth == 3:  # Game tree has depth 3
+            return self.scores.pop(0)
+
+        if is_ghost_turn:  # Ghost minimizes Pacman's score
+            best_score = float('inf')
+            for _ in range(2):  # Two possible moves
+                score = self.alpha_beta(depth + 1, alpha, beta, False)
+                best_score = min(best_score, score)
+                beta = min(beta, score)
+                if beta &lt;= alpha:  # Prune branches
+                    break
+            return best_score
+        else:  # Pacman maximizes his score
+            best_score = float('-inf')
+            for _ in range(2):
+                score = self.alpha_beta(depth + 1, alpha, beta, True)
+                best_score = max(best_score, score)
+                alpha = max(alpha, score)
+                if beta &lt;= alpha:
+                    break
+            return best_score
+
+    def pacman_game(self, magic_cost):
+        # Reset scores
+        self.scores = [3, 6, 2, 3, 7, 1, 2, 0]
+        no_magic_value = self.alpha_beta(0, float('-inf'), float('inf'), False)
+
+        # Simulate using magic
+        left_magic_value = 6 - magic_cost  # Left path
+        right_magic_value = 7 - magic_cost  # Right path
+
+        # Decide best strategy
+        if left_magic_value &gt; right_magic_value:
+            return left_magic_value, "Pacman uses dark magic to go left."
+        return right_magic_value, "Pacman uses dark magic to go right."
+
+
+# Running Mortal Kombat Simulation
+print("=== Mortal Kombat Simulation ===")
+game = MortalKombat(first_player=0)  # Scorpion starts
+rounds = game.simulate()
+print(f"Game Winner: {rounds[-1]}")
+print(f"Total Rounds Played: {len(rounds)}")
+for i, winner in enumerate(rounds, start=1):
+    print(f"Winner of Round {i}: {winner}")
+
+# Running Pacman Game with Magic
+print("\n=== Pacman Game with Magic ===")
+pacman_game = PacmanGame()
+
+# Example: Magic cost = 2
+value, strategy = pacman_game.pacman_game(2)
+print(f"Final Score: {value}. Strategy: {strategy}")
+
+# Example: Magic cost = 5
+value, strategy = pacman_game.pacman_game(5)
+print(f"Final Score: {value}. Strategy: {strategy}")
+</pre>
+</body>
+</html>

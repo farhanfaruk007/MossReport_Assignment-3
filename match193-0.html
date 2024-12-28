@@ -1,0 +1,135 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/7/22101236_Sawrave_Ahmed_CSE422_07_Assignment03_Fall2024_-_SAWRAVE_AHMED.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/7/22101236_Sawrave_Ahmed_CSE422_07_Assignment03_Fall2024_-_SAWRAVE_AHMED.py<p></p><pre>
+# part -1 
+
+class MortalKombat:
+    def __init__(self, first_player):
+        self.first_player = first_player #[subzero(1), scorpion(0)]
+        self.rounds = []
+        self.current_round = 1
+
+    def round_winner(self):
+        if self.current_round == 1:
+            if self.first_player == 1: #subzero starting
+                return -1 # scorpion wins
+            elif self.first_player == 0:
+                return 1 # subzero wins
+            
+        elif self.current_round == 2:
+            return -1 # scorpion wins
+        elif self.current_round == 3:
+            return -1 # scorpion wins
+        
+    def alpha_beta_pruning(self, depth , node_index, max_min_player, alpha, beta):
+        if depth == 5:
+            return self.round_winner()
+        
+        if max_min_player:
+            maximizing = float('-inf')
+            for i in range(2):
+                val = self.alpha_beta_pruning(depth+1, node_index*2 + i, False, alpha, beta)
+                maximizing = max(maximizing, val)
+                alpha = max(alpha, val)
+                if beta &lt;= alpha:
+                    break
+            return maximizing
+        else:
+            minimizing = float('inf')
+            for i in range(2):
+                val = self.alpha_beta_pruning(depth+1, node_index*2 + i, True, alpha, beta)
+                minimizing = min(minimizing, val)
+                beta = min(beta, val)
+                if beta &lt;= alpha:
+                    break
+            return minimizing
+
+    
+    def simulate_game(self):
+        while self.current_round &lt;= 3:
+            first_player = self.first_player
+<a name="2"></a><font color="#0000FF"><a href="match193-1.html#2" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_5.gif"/></a>
+
+            winner = self.alpha_beta_pruning(0, 1, first_player, float('-inf'), float('inf'))
+
+            if winner == -1:
+                self.rounds.append("Scorpion")
+            else:
+                self.rounds.append("Sub-Zero")
+            self.current_round += 1
+</font>            self.first_player = 1 - first_player
+
+<a name="1"></a><font color="#00FF00"><a href="match193-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_8.gif"/></a>
+
+        game_winner = max(set(self.rounds), key=self.rounds.count)
+    
+        return game_winner, self.rounds
+
+if __name__ == "__main__":
+
+  player1 = int(input("Enter the first player (0 for Scorpion, 1 for Sub-Zero): "))
+  game = MortalKombat(player1)
+  game_winner, rounds = game.simulate_game()
+
+  print(f"Game Winner: {game_winner}")
+  print(f"Total Rounds Played: {len(rounds)}")
+  for i, round_winner in enumerate(rounds, 1):
+</font>    print(f"Winner of Round {i}: {round_winner}")
+
+
+
+# part -2
+
+def alpha_beta_pruning(depth , node_index, outcomes, max_min_player, alpha, beta):
+        if depth == 3:
+            return outcomes[node_index]
+        
+        if max_min_player:
+            maximizing = float('-inf')
+            for i in range(2):
+                val = alpha_beta_pruning(depth+1, node_index*2 + i, outcomes, False, alpha, beta)
+                maximizing = max(maximizing, val)
+                alpha = max(alpha, val)
+                if beta &lt;= alpha:
+                    break
+            return maximizing
+        else:
+            minimizing = float('inf')
+            for i in range(2):
+                val = alpha_beta_pruning(depth+1, node_index*2 + i, outcomes, True, alpha, beta)
+                minimizing = min(minimizing, val)
+                beta = min(beta, val)
+                if beta &lt;= alpha:
+                    break
+            return minimizing
+def pacman(c):
+<a name="0"></a><font color="#FF0000"><a href="match193-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_12.gif"/></a>
+
+    outcomes = [3, 6, 2, 3, 7, 1, 2, 0]
+
+    minimax = alpha_beta_pruning(0, 0, outcomes, True, float('-inf'), float('inf'))
+
+    left_sub_tree = max(outcomes[0], outcomes[1]) - c
+    right_sub_tree = max(outcomes[4], outcomes[5]) - c
+
+    if left_sub_tree &gt; right_sub_tree:
+        temp_minimax = left_sub_tree
+        direction = "left"
+    else:
+        temp_minimax = right_sub_tree
+        direction =  "right"
+    # Checking whether using dark magic is beneficial or not
+    if temp_minimax &gt; minimax:
+</font>        print(f"The new minimax value is {temp_minimax}. Pacman goes {direction} and uses dark magic.")
+    else:
+        print(f"The minimax value is {minimax}. Pacman does not use dark magic.")
+
+
+c = int(input("Enter the cost of using dark magic: "))
+pacman(c)</pre>
+</body>
+</html>

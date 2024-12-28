@@ -1,0 +1,147 @@
+<html>
+<head>
+<title>C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/5/20101076_05_lab03_-_SAJID_MAHMUD.py</title>
+</head>
+<body bgcolor="white">
+<hr/>
+C:/Users/Farhan_Faruk/Downloads/Lab3_Submission/5/20101076_05_lab03_-_SAJID_MAHMUD.py<p></p><pre>
+import random
+# Task01
+<a name="0"></a><font color="#FF0000"><a href="match168-1.html#0" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_0_13.gif"/></a>
+
+class MortalKombat:
+    def __init__(self, first_player):
+        self.first_player = first_player  # 0 for Scorpion, 1 for Sub-Zero
+        self.rounds = 0
+        self.winner = None
+        self.round_winners = []
+
+    def alpha_beta_pruning(self, depth, node_index, maximizing_player, alpha, beta):
+        # Base case: if maximum depth is reached, return the utility value of the leaf node
+        if depth == 5:
+            return self.leaf_node_value(node_index)
+
+        if maximizing_player:
+            max_eval = float('-inf')
+            for i in range(2):  # Branching factor is 2
+                eval = self.alpha_beta_pruning(depth + 1, node_index * 2 + i, False, alpha, beta)
+</font>                max_eval = max(max_eval, eval)
+                alpha = max(alpha, eval)
+                if beta &lt;= alpha:
+                    break  
+            return max_eval
+        else:
+            min_eval = float('inf')
+            for i in range(2):  
+                eval = self.alpha_beta_pruning(depth + 1, node_index * 2 + i, True, alpha, beta)
+<a name="2"></a><font color="#0000FF"><a href="match168-1.html#2" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_2_4.gif"/></a>
+
+                min_eval = min(min_eval, eval)
+                beta = min(beta, eval)
+                if beta &lt;= alpha:
+                    break  
+            return min_eval
+
+    def leaf_node_value(self, node_index):
+        
+        # Alternating between -1 (Scorpion wins) and 1 (Sub-Zero wins)
+        leaf_values = [-1, 1] * 16  
+</font><a name="1"></a><font color="#00FF00"><a href="match168-1.html#1" target="1"><img align="left" alt="other" border="0" src="http://moss.stanford.edu/bitmaps/tm_1_12.gif"/></a>
+
+        return leaf_values[node_index]
+
+    def simulate_battle(self):
+        current_player = self.first_player  # Track who starts each round
+        for round_num in range(3):  # Play 3 rounds
+            self.rounds += 1
+            # Alpha-Beta Pruning simulation
+            round_result = self.alpha_beta_pruning(0, 0, current_player == 1, float('-inf'), float('inf'))
+            if round_result == -1:
+                self.round_winners.append("Scorpion")
+                current_player = 1  # Sub-Zero starts the next round
+            else:
+                self.round_winners.append("Sub-Zero")
+                current_player = 0  # Scorpion starts the next round
+
+        # Determine game winner
+        scorpion_wins = self.round_winners.count("Scorpion")
+</font>        subzero_wins = self.round_winners.count("Sub-Zero")
+        self.winner = "Scorpion" if scorpion_wins &gt; subzero_wins else "Sub-Zero"
+
+    def display_results(self):
+        print(f"Game Winner: {self.winner}")
+        print(f"Total Rounds Played: {self.rounds}")
+        for i, winner in enumerate(self.round_winners, 1):
+            print(f"Winner of Round {i}: {winner}")
+
+
+# Example usage
+if __name__ == "__main__":
+    # Input: Which player starts first (0 for Scorpion, 1 for Sub-Zero)
+    first_player = int(input("Enter the first player (0 for Scorpion, 1 for Sub-Zero): "))
+    game = MortalKombat(first_player)
+    game.simulate_battle()
+    game.display_results()
+
+
+
+
+# Task02
+
+# Function for Minimax with Alpha-Beta Pruning
+def alpha_beta_pruning(node, depth, alpha, beta, maximizing_player):
+    if depth == 0 or isinstance(node, int):  # Terminal node (leaf)
+        return node
+
+    if maximizing_player:
+        max_eval = float('-inf')
+        for child in node:
+            eval = alpha_beta_pruning(child, depth - 1, alpha, beta, False)
+            max_eval = max(max_eval, eval)
+            alpha = max(alpha, eval)
+            if beta &lt;= alpha:
+                break  
+        return max_eval
+    else:
+        min_eval = float('inf')
+        for child in node:
+            eval = alpha_beta_pruning(child, depth - 1, alpha, beta, True)
+            min_eval = min(min_eval, eval)
+            beta = min(beta, eval)
+            if beta &lt;= alpha:
+                break  
+        return min_eval
+
+
+
+# Without "dark magic"
+tree_without_magic = [
+    [3, 5, [6, 9]],  # Left subtree
+    [[1, 2], [0, -1], 3]  # Right subtree
+]
+
+# With "dark magic" applied (higher beneficial impact on the right subtree)
+tree_with_magic = [
+    [3, 5, [6, 9]],  
+    [[10, 12], [8, 7], 3]  # Right subtree modified by "dark magic"
+]
+
+# without dark magic
+final_value_without_magic = alpha_beta_pruning(tree_without_magic, depth=3, alpha=float('-inf'), beta=float('inf'), maximizing_player=True)
+
+# with dark magic
+final_value_with_magic = alpha_beta_pruning(tree_with_magic, depth=3, alpha=float('-inf'), beta=float('inf'), maximizing_player=True)
+
+# Print 
+print("Final root value without dark magic:", final_value_without_magic)
+print("Final root value with dark magic:", final_value_with_magic)
+
+#  Pac-Man's advantage based on direction
+advantage_left = "left" if final_value_with_magic &gt; final_value_without_magic else "none"
+advantage_right = "right" if final_value_with_magic &gt; final_value_without_magic else "none"
+
+print("Pac-Man's advantage with dark magic:")
+print(f"Left direction: {advantage_left}")
+print(f"Right direction: {advantage_right}")</pre>
+</body>
+</html>
